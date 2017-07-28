@@ -1,11 +1,15 @@
 package com.example.android.bakers.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Recipe {
+public class Recipe implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -74,100 +78,44 @@ public class Recipe {
         this.image = image;
     }
 
-    public class Ingredient {
-
-        @SerializedName("quantity")
-        @Expose
-        private Double quantity;
-        @SerializedName("measure")
-        @Expose
-        private String measure;
-        @SerializedName("ingredient")
-        @Expose
-        private String ingredient;
-
-        public Double getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(Double quantity) {
-            this.quantity = quantity;
-        }
-
-        public String getMeasure() {
-            return measure;
-        }
-
-        public void setMeasure(String measure) {
-            this.measure = measure;
-        }
-
-        public String getIngredient() {
-            return ingredient;
-        }
-
-        public void setIngredient(String ingredient) {
-            this.ingredient = ingredient;
-        }
-
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public class Step {
-
-        @SerializedName("id")
-        @Expose
-        private Integer id;
-        @SerializedName("shortDescription")
-        @Expose
-        private String shortDescription;
-        @SerializedName("description")
-        @Expose
-        private String description;
-        @SerializedName("videoURL")
-        @Expose
-        private String videoURL;
-        @SerializedName("thumbnailURL")
-        @Expose
-        private String thumbnailURL;
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getShortDescription() {
-            return shortDescription;
-        }
-
-        public void setShortDescription(String shortDescription) {
-            this.shortDescription = shortDescription;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getVideoURL() {
-            return videoURL;
-        }
-
-        public void setVideoURL(String videoURL) {
-            this.videoURL = videoURL;
-        }
-
-        public String getThumbnailURL() {
-            return thumbnailURL;
-        }
-
-        public void setThumbnailURL(String thumbnailURL) {
-            this.thumbnailURL = thumbnailURL;
-        }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.name);
+        dest.writeList(this.ingredients);
+        dest.writeList(this.steps);
+        dest.writeValue(this.servings);
+        dest.writeString(this.image);
     }
+
+    public Recipe() {
+    }
+
+    protected Recipe(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.name = in.readString();
+        this.ingredients = new ArrayList<Ingredient>();
+        in.readList(this.ingredients, Ingredient.class.getClassLoader());
+        this.steps = new ArrayList<Step>();
+        in.readList(this.steps, Step.class.getClassLoader());
+        this.servings = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.image = in.readString();
+    }
+
+    public static final Parcelable.Creator<Recipe> CREATOR = new Parcelable.Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel source) {
+            return new Recipe(source);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
 }

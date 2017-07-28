@@ -29,12 +29,13 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class RecipeFragment extends Fragment {
+public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeClickHandler {
 
     public static final String TAG= RecipeFragment.class.getSimpleName();
 
     private ApiService apiService;
     private RecyclerView rvRecipe;
+    private List<Recipe> mRecipeList;
 
 
     public RecipeFragment() {
@@ -66,8 +67,8 @@ public class RecipeFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 if(response.isSuccessful()){
-                    List<Recipe> recipeList = response.body();
-                    RecipeAdapter recipeAdapter= new RecipeAdapter(getContext(), recipeList);
+                    mRecipeList = response.body();
+                    RecipeAdapter recipeAdapter= new RecipeAdapter(getContext(), mRecipeList, RecipeFragment.this);
                     LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                     rvRecipe.setLayoutManager(linearLayoutManager);
                     rvRecipe.setAdapter(recipeAdapter);
@@ -81,5 +82,10 @@ public class RecipeFragment extends Fragment {
         });
     }
 
-
+    @Override
+    public void onRecipeClickListener(int position) {
+        Bundle b= new Bundle();
+        b.putParcelable("recipeData", mRecipeList.get(position));
+        ((MainActivity) getActivity()).showRecipeDetailsFragment(b);
+    }
 }

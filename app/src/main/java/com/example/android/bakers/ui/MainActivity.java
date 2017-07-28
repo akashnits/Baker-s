@@ -22,6 +22,16 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.replace(R.id.fragment_container, recipeFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
+
         }
+    }
+
+    public void showRecipeDetailsFragment(Bundle b){
+        RecipeDetailsFragment recipeDetailsFragment= new RecipeDetailsFragment();
+        recipeDetailsFragment.setArguments(b);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeDetailsFragment)
+        .addToBackStack(null)
+        .commit();
     }
 }

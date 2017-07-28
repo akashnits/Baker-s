@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="50dp">
+
+    <TextView
+        android:id="@+id/tvIngredientName"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        tools:text="Grahamm cracker crumbs"
+        android:padding="4dp"
+        android:gravity="center_vertical" />
+
+    <TextView
+        android:id="@+id/tvQuantity"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        tools:text="2"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="60dp"
+        android:gravity="center_vertical"/>
+
+    <TextView
+        android:id="@+id/tvMeasure"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        tools:text="TBSP"
+        android:gravity="center_vertical"
+        android:layout_marginEnd="10dp"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>
