@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.android.bakers.R;
 import com.example.android.bakers.model.Ingredient;
 import com.example.android.bakers.model.Recipe;
+import com.example.android.bakers.model.Step;
 
 import java.util.List;
 
@@ -22,11 +23,18 @@ public class RecipeDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
     private Context mContext;
-    private List<Recipe> mRecipeList;
+    private Recipe mRecipe;
+    private OnRecipeStepClickHandler mHandler;
+    private int mNumberOfIngredients;
 
-    public RecipeDetailsAdapter(Context mContext, List<Recipe> mRecipeList) {
+    public RecipeDetailsAdapter(Context mContext, Recipe recipe, OnRecipeStepClickHandler handler) {
         this.mContext = mContext;
-        this.mRecipeList = mRecipeList;
+        this.mRecipe = recipe;
+        this.mHandler= handler;
+    }
+
+    public interface OnRecipeStepClickHandler{
+        void onRecipeStepClickListener(int position, int numberOfIngredients);
     }
 
     @Override
@@ -45,32 +53,63 @@ public class RecipeDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+        switch (holder.getItemViewType()){
+            case 0:
+                IngredientsViewHolder ingredientsViewHolder= (IngredientsViewHolder) holder;
+                List<Ingredient> ingredientList= null;
+                ingredientList= mRecipe.getIngredients();
+                Ingredient ingredient= null;
+                if(ingredientList != null && ingredientList.size() > 0){
+                    ingredient= ingredientList.get(position);
+                }
+                if(ingredient != null){
+                    ingredientsViewHolder.tvIngredientName.setText(ingredient.getIngredient());
+                    ingredientsViewHolder.tvQuantity.setText(String.valueOf(ingredient.getQuantity()));
+                    ingredientsViewHolder.tvMeasure.setText(ingredient.getMeasure());
+                }
+                break;
+            case 1:
+                StepsViewHolder stepsViewHolder= (StepsViewHolder) holder;
+                List<Ingredient> ingredientLists= null;
+                ingredientLists= mRecipe.getIngredients();
+                List<Step> stepList= null;
+                stepList= mRecipe.getSteps();
+                Step step= null;
+                if(stepList != null && stepList.size() > 0){
+                    step= stepList.get(position- ingredientLists.size());
+                }
+                if(step != null){
+                    stepsViewHolder.tvStepShortDescription.setText(step.getShortDescription());
+                }
+                break;
+            default:
+                return;
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        if(mRecipe == null)
+            return 0;
+        return (mRecipe.getIngredients().size() + mRecipe.getSteps().size());
     }
 
     @Override
     public int getItemViewType(int position) {
-        Recipe recipe = mRecipeList.get(position);
-        int numberOfRowsOfIngredients = 0;
-        if (recipe != null) {
-            List<Ingredient> ingredientList = recipe.getIngredients();
+        if (mRecipe != null) {
+            List<Ingredient> ingredientList = mRecipe.getIngredients();
             if (ingredientList != null) {
-                numberOfRowsOfIngredients = ingredientList.size();
+                mNumberOfIngredients = ingredientList.size();
             }
         }
-        if (position < numberOfRowsOfIngredients) {
+        if (position < mNumberOfIngredients) {
             return 0;
         } else {
             return 1;
         }
     }
 
-    class IngredientsViewHolder extends RecyclerView.ViewHolder {
+     class IngredientsViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvIngredientName)
         TextView tvIngredientName;
         @BindView(R.id.tvQuantity)
@@ -84,12 +123,18 @@ public class RecipeDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    class StepsViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.idStepShortDescription)
-        TextView idStepShortDescription;
+     class StepsViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.tvStepShortDescription)
+        TextView tvStepShortDescription;
         public StepsViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            tvStepShortDescription.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mHandler.onRecipeStepClickListener(getAdapterPosition(), mNumberOfIngredients);
+                }
+            });
         }
     }
 }

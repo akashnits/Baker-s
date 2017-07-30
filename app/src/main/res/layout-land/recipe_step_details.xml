@@ -3,15 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp">
+    android:layout_height="match_parent"
+   >
 
-    <TextView
-        android:id="@+id/tvStepShortDescription"
+
+    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+        android:id="@+id/mediaPlayerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:text="Prep the cookie crust."
-        android:padding="4dp"
-        />
+        android:layout_marginTop="0dp"
+         />
+
 
 </LinearLayout>
