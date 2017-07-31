@@ -38,39 +38,14 @@ public class MainActivity extends AppCompatActivity {
         .commit();
     }
 
-    public void showRecipeStepDetailsFragment(Bundle b, boolean addToBackStack){
+    public void showRecipeStepDetailsFragment(Bundle b){
         RecipeStepDetailsFragment recipeStepDetailsFragment= new RecipeStepDetailsFragment();
         recipeStepDetailsFragment.setArguments(b);
 
-
-        if(addToBackStack) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeStepDetailsFragment, "recipeStepDetailsFragment")
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeStepDetailsFragment,
+                    "recipeStepDetailsFragment")
                     .addToBackStack("recipeStepDetailsFragment")
                     .commit();
-        }
-        else {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeStepDetailsFragment)
-                    .commit();
-        }
-    }
 
-    @Override
-    public void onBackPressed() {
-        List<Fragment> fragmentList= getSupportFragmentManager().getFragments();
-        boolean flag= false;
-        if(fragmentList.size() > 0) {
-            for (Fragment fragment : fragmentList) {
-                if (fragment != null && fragment.getTag() != null) {
-                        if (fragment.getTag().equals("recipeStepDetailsFragment")) {
-                            getSupportFragmentManager().popBackStack("recipeStepDetailsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                            flag = true;
-                    }
-                }
-            }
-        }
-
-
-        if(!flag)
-            super.onBackPressed();
     }
 }

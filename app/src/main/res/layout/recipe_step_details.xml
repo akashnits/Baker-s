@@ -19,41 +19,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_weight="1"
-        android:weightSum="1">
+        >
 
         <TextView
             android:id="@+id/tvRecipeStepDescription"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.2"
             android:paddingTop="4dp"
             tools:text="5. Beat the cream cheese and 50 grams (1/4 cup) of sugar on medium speed in a stand mixer or high speed with a hand mixer for 3 minutes. Decrease the speed to medium-low and gradually add in the cold cream. Add in 2 teaspoons of vanilla and beat until stiff peaks form." />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_weight="0.8">
-
-            <Button
-                android:id="@+id/btPrevious"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Previous"
-                android:onClick="previousClicked"/>
-
-            <Button
-                android:id="@+id/btNext"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Next"
-                android:onClick="nextClicked"/>
-
-        </LinearLayout>
-
 
     </LinearLayout>
 

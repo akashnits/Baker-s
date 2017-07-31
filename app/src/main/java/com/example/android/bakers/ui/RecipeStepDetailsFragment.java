@@ -62,31 +62,7 @@ public class RecipeStepDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.recipe_step_details, container, false);
         unbinder = ButterKnife.bind(this, view);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-        btPrevious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mExoPlayer != null && mStepId != 0) {
-                    mExoPlayer.stop();
-                }
-                if(mStepId != 0)
-                {
-                    mStepId--;
-                    ((MainActivity) getActivity()).showRecipeStepDetailsFragment(getBundle(), false);
-                }
 
-            }
-        });
-        btNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mExoPlayer != null && mStepId != mStepArrayList.size()-1)
-                    mExoPlayer.stop();
-                if(mStepArrayList != null && mStepId != mStepArrayList.size()-1){
-                    mStepId++;
-                    ((MainActivity) getActivity()).showRecipeStepDetailsFragment(getBundle(), false);
-                }
-            }
-        });
         }
         return view;
     }
@@ -227,10 +203,5 @@ public class RecipeStepDetailsFragment extends Fragment {
         return null;
     }
 
-    private Bundle getBundle(){
-        Bundle bundle= new Bundle();
-        bundle.putParcelableArrayList("stepArrayList", mStepArrayList);
-        bundle.putInt("stepPosition", mStepId);
-        return bundle;
-    }
+
 }
