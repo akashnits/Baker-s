@@ -5,8 +5,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.android.bakers.R;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,12 +38,39 @@ public class MainActivity extends AppCompatActivity {
         .commit();
     }
 
-    public void showRecipeStepDetailsFragment(Bundle b){
+    public void showRecipeStepDetailsFragment(Bundle b, boolean addToBackStack){
         RecipeStepDetailsFragment recipeStepDetailsFragment= new RecipeStepDetailsFragment();
         recipeStepDetailsFragment.setArguments(b);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeStepDetailsFragment)
-                .addToBackStack(null)
-                .commit();
+
+        if(addToBackStack) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeStepDetailsFragment, "recipeStepDetailsFragment")
+                    .addToBackStack("recipeStepDetailsFragment")
+                    .commit();
+        }
+        else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeStepDetailsFragment)
+                    .commit();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        List<Fragment> fragmentList= getSupportFragmentManager().getFragments();
+        boolean flag= false;
+        if(fragmentList.size() > 0) {
+            for (Fragment fragment : fragmentList) {
+                if (fragment != null && fragment.getTag() != null) {
+                        if (fragment.getTag().equals("recipeStepDetailsFragment")) {
+                            getSupportFragmentManager().popBackStack("recipeStepDetailsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                            flag = true;
+                    }
+                }
+            }
+        }
+
+
+        if(!flag)
+            super.onBackPressed();
     }
 }

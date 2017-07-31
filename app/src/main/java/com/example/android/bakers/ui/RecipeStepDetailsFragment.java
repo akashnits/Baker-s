@@ -65,13 +65,13 @@ public class RecipeStepDetailsFragment extends Fragment {
         btPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mExoPlayer != null)
+                if(mExoPlayer != null && mStepId != 0) {
                     mExoPlayer.stop();
+                }
                 if(mStepId != 0)
                 {
                     mStepId--;
-
-                    ((MainActivity) getActivity()).showRecipeStepDetailsFragment(getBundle());
+                    ((MainActivity) getActivity()).showRecipeStepDetailsFragment(getBundle(), false);
                 }
 
             }
@@ -79,12 +79,11 @@ public class RecipeStepDetailsFragment extends Fragment {
         btNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mExoPlayer != null)
+                if(mExoPlayer != null && mStepId != mStepArrayList.size()-1)
                     mExoPlayer.stop();
                 if(mStepArrayList != null && mStepId != mStepArrayList.size()-1){
                     mStepId++;
-
-                    ((MainActivity) getActivity()).showRecipeStepDetailsFragment(getBundle());
+                    ((MainActivity) getActivity()).showRecipeStepDetailsFragment(getBundle(), false);
                 }
             }
         });
@@ -168,6 +167,32 @@ public class RecipeStepDetailsFragment extends Fragment {
             mExoPlayer = null;
         }
             }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mExoPlayer != null)
+            releasePlayer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Step step = null;
+        if (mStepArrayList != null)
+            step = mStepArrayList.get(mStepId);
+        if (mExoPlayer == null) {
+            if (step != null) {
+                if (step.getVideoURL().length() > 0) {
+                    initializePlayer(Uri.parse(step.getVideoURL()));
+                } else if (step.getVideoURL().length() > 0) {
+                    initializePlayer(Uri.parse(step.getThumbnailURL()));
+                } else {
+                    initializePlayer(null);
+                }
+            }
+        }
+    }
 
     @Override
     public void onDestroyView() {

@@ -70,7 +70,7 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
         b.putParcelableArrayList("stepArrayList", (ArrayList<? extends Parcelable>) mRecipe.getSteps());
         b.putInt("stepPosition", actualPosition);
 
-        ((MainActivity) getActivity()).showRecipeStepDetailsFragment(b);
+        ((MainActivity) getActivity()).showRecipeStepDetailsFragment(b, true);
     }
 
     @Override
