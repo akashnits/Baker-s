@@ -152,8 +152,12 @@ public class RecipeStepDetailsFragment extends Fragment {
                                             getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
                 LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource, 5);
                 mExoPlayer.prepare(loopingSource);
-                mExoPlayer.setPlayWhenReady(true);
+                mExoPlayer.setPlayWhenReady(false);
             }
+        }else if(mExoPlayer != null){
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer= null;
         }
     }
 
@@ -197,6 +201,37 @@ public class RecipeStepDetailsFragment extends Fragment {
             return step;
         }
         return null;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mExoPlayer != null){
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer= null;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Step step = null;
+        if (mStepArrayList != null)
+            step = mStepArrayList.get(mStepId);
+        if (mExoPlayer == null) {
+            if (step != null) {
+                if (step.getVideoURL().length() > 0) {
+                    initializePlayer(Uri.parse(step.getVideoURL()));
+                } else if (step.getVideoURL().length() > 0) {
+                    initializePlayer(Uri.parse(step.getThumbnailURL()));
+                } else {
+                    initializePlayer(null);
+                }
+
+            }
+
+        }
     }
 
 }

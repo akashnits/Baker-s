@@ -39,8 +39,10 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
     private ArrayList<Step> mStepArrayList;
 
 
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_step_details);
         ButterKnife.bind(this);
@@ -64,7 +66,24 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
+
+                int previousStepId= mStepId;
                 mStepId= position;
+
+                if(mStepArrayList != null){
+                    Step step= mStepArrayList.get(mStepId);
+                    if(step != null){
+                        if(step.getVideoURL() != null && step.getVideoURL().length()> 0){
+                            return;
+                        }else if(step.getThumbnailURL() != null && step.getThumbnailURL().length() > 0){
+                            return;
+                        }else {
+                            Toast.makeText(RecipeStepDetailsActivity.this, "No videos available", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+
             }
 
             @Override
@@ -91,7 +110,7 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
             public void onClick(View v) {
                 if(mExoPlayer != null && mStepId != mStepArrayList.size()-1)
                     mExoPlayer.stop();
-                if(mStepArrayList != null && mStepId != mStepArrayList.size()-1){
+                if(mStepArrayList != null && mStepId < mStepArrayList.size()-1){
 
                     mPager.setCurrentItem(mStepId + 1);
                 }
@@ -107,8 +126,7 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-                RecipeStepDetailsFragment recipeStepDetailsFragment= RecipeStepDetailsFragment.newInstance(position, mStepArrayList);
-                return recipeStepDetailsFragment;
+                return RecipeStepDetailsFragment.newInstance(position, mStepArrayList);
         }
 
         @Override
