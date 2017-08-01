@@ -1,5 +1,6 @@
 package com.example.android.bakers.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -70,7 +71,9 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
         b.putParcelableArrayList("stepArrayList", (ArrayList<? extends Parcelable>) mRecipe.getSteps());
         b.putInt("stepPosition", actualPosition);
 
-        ((MainActivity) getActivity()).showRecipeStepDetailsFragment(b, true);
+        Intent intent= new Intent(getActivity(), RecipeStepDetailsActivity.class);
+        intent.putExtra("data", b);
+        startActivity(intent);
     }
 
     @Override

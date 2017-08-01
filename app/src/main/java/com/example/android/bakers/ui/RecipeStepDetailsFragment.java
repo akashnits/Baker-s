@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.example.android.bakers.R;
 import com.example.android.bakers.model.Step;
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -30,6 +33,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,20 +60,37 @@ public class RecipeStepDetailsFragment extends Fragment {
     private ArrayList<Step> mStepArrayList;
 
 
+   public static RecipeStepDetailsFragment newInstance(int position, ArrayList<Step> stepArrayList) {
+
+        Bundle args = new Bundle();
+        args.putInt("stepPosition", position);
+        args.putParcelableArrayList("stepArrayList", stepArrayList);
+
+        RecipeStepDetailsFragment fragment = new RecipeStepDetailsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recipe_step_details, container, false);
         unbinder = ButterKnife.bind(this, view);
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-
-        }
+        Log.v("RecipeStepDetailsFragmt", "onCreateView");
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Log.v("RecipeStepDetailsFragmt", "onViewCreated");
+
         if(savedInstanceState == null) {
             Bundle args = getArguments();
             mStepId= args.getInt("stepPosition");
@@ -116,6 +137,8 @@ public class RecipeStepDetailsFragment extends Fragment {
         }
     }
 
+
+
     private void initializePlayer(Uri mediaUri){
         if(mediaUri != null){
             if(mediaPlayerView != null){
@@ -131,8 +154,6 @@ public class RecipeStepDetailsFragment extends Fragment {
                 mExoPlayer.prepare(loopingSource);
                 mExoPlayer.setPlayWhenReady(true);
             }
-        }else{
-            Toast.makeText(getContext(), "No Video available", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -144,31 +165,6 @@ public class RecipeStepDetailsFragment extends Fragment {
         }
             }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        if(mExoPlayer != null)
-            releasePlayer();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Step step = null;
-        if (mStepArrayList != null)
-            step = mStepArrayList.get(mStepId);
-        if (mExoPlayer == null) {
-            if (step != null) {
-                if (step.getVideoURL().length() > 0) {
-                    initializePlayer(Uri.parse(step.getVideoURL()));
-                } else if (step.getVideoURL().length() > 0) {
-                    initializePlayer(Uri.parse(step.getThumbnailURL()));
-                } else {
-                    initializePlayer(null);
-                }
-            }
-        }
-    }
 
     @Override
     public void onDestroyView() {
@@ -202,6 +198,5 @@ public class RecipeStepDetailsFragment extends Fragment {
         }
         return null;
     }
-
 
 }

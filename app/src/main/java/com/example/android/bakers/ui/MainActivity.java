@@ -37,15 +37,4 @@ public class MainActivity extends AppCompatActivity {
         .addToBackStack(null)
         .commit();
     }
-
-    public void showRecipeStepDetailsFragment(Bundle b){
-        RecipeStepDetailsFragment recipeStepDetailsFragment= new RecipeStepDetailsFragment();
-        recipeStepDetailsFragment.setArguments(b);
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeStepDetailsFragment,
-                    "recipeStepDetailsFragment")
-                    .addToBackStack("recipeStepDetailsFragment")
-                    .commit();
-
-    }
 }
