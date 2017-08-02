@@ -39,6 +39,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static android.R.attr.orientation;
+
 
 public class RecipeStepDetailsFragment extends Fragment {
     @Nullable
@@ -58,6 +60,8 @@ public class RecipeStepDetailsFragment extends Fragment {
     private SimpleExoPlayer mExoPlayer;
     private int mStepId;
     private ArrayList<Step> mStepArrayList;
+    private Step mStep;
+    private boolean isVisible= false;
 
 
    public static RecipeStepDetailsFragment newInstance(int position, ArrayList<Step> stepArrayList) {
@@ -81,7 +85,6 @@ public class RecipeStepDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recipe_step_details, container, false);
         unbinder = ButterKnife.bind(this, view);
-        Log.v("RecipeStepDetailsFragmt", "onCreateView");
         return view;
     }
 
@@ -89,55 +92,67 @@ public class RecipeStepDetailsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Log.v("RecipeStepDetailsFragmt", "onViewCreated");
-
-        if(savedInstanceState == null) {
             Bundle args = getArguments();
             mStepId= args.getInt("stepPosition");
-            Step step= null;
             try {
                 mStepArrayList= args.getParcelableArrayList("stepArrayList");
                 if(mStepArrayList != null)
-                    step = mStepArrayList.get(mStepId);
+                    mStep = mStepArrayList.get(mStepId);
             } catch (ClassCastException e) {
                 e.printStackTrace();
-            }
-
-
-            if (step != null) {
-                if (step.getVideoURL().length() > 0) {
-                    initializePlayer(Uri.parse(step.getVideoURL()));
-                } else if (step.getVideoURL().length() > 0) {
-                    initializePlayer(Uri.parse(step.getThumbnailURL()));
-                } else {
-                    initializePlayer(null);
-                }
-
-                String description = step.getDescription();
-                if (description.length() > 0)
-                    tvRecipeStepDescription.setText(description);
-            }
         }
-
-        if(savedInstanceState != null && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            setInitializePlayer(savedInstanceState);
-
-        }
-        if(savedInstanceState != null && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            Step step = setInitializePlayer(savedInstanceState);
-
-
-            if(step != null) {
-                String description = step.getDescription();
-                if (description != null && description.length() > 0)
-                    tvRecipeStepDescription.setText(description);
-
-                mStepId = step.getId();
-            }
+        if(isVisible) {
+            initializeVisibleFragment(mStep);
         }
     }
 
 
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            isVisible = true;
+            if(mStep != null){
+                initializeVisibleFragment(mStep);
+            }
+        }
+    }
+
+    private void initializeVisibleFragment(Step step) {
+
+        if (step != null) {
+            if (step.getVideoURL().length() > 0) {
+                initializePlayer(Uri.parse(step.getVideoURL()));
+            } else if (step.getThumbnailURL().length() > 0) {
+                initializePlayer(Uri.parse(step.getThumbnailURL()));
+            } else {
+                initializePlayer(null);
+            }
+
+            String description = step.getDescription();
+            if (description.length() > 0)
+                tvRecipeStepDescription.setText(description);
+        }
+
+
+//        if (savedInstanceState != null && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//            setInitializePlayer(savedInstanceState);
+//
+//        }
+//        if (savedInstanceState != null && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+//            Step pStep = setInitializePlayer(savedInstanceState);
+//
+//
+//            if (pStep != null) {
+//                String description = pStep.getDescription();
+//                if (description != null && description.length() > 0)
+//                    tvRecipeStepDescription.setText(description);
+//
+//                mStepId = pStep.getId();
+//            }
+//        }
+    }
 
     private void initializePlayer(Uri mediaUri){
         if(mediaUri != null){
@@ -154,10 +169,8 @@ public class RecipeStepDetailsFragment extends Fragment {
                 mExoPlayer.prepare(loopingSource);
                 mExoPlayer.setPlayWhenReady(false);
             }
-        }else if(mExoPlayer != null){
-            mExoPlayer.stop();
-            mExoPlayer.release();
-            mExoPlayer= null;
+        }else {
+            Toast.makeText(getContext(), "No video available", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -183,55 +196,58 @@ public class RecipeStepDetailsFragment extends Fragment {
 
         outState.putInt("stepPosition", mStepId);
         outState.putParcelableArrayList("stepArrayList", mStepArrayList);
+
     }
 
-    private Step setInitializePlayer(Bundle savedInstanceState){
-        Step step= null;
-        mStepArrayList= savedInstanceState.getParcelableArrayList("stepArrayList");
-        mStepId= savedInstanceState.getInt("stepPosition");
-        step= mStepArrayList.get(mStepId);
-        if (step != null) {
-            if (step.getVideoURL().length() > 0) {
-                initializePlayer(Uri.parse(step.getVideoURL()));
-            } else if (step.getVideoURL().length() > 0) {
-                initializePlayer(Uri.parse(step.getThumbnailURL()));
-            } else {
-                initializePlayer(null);
-            }
-            return step;
-        }
-        return null;
-    }
+//    private Step setInitializePlayer(Bundle savedInstanceState){
+//        Step step= null;
+//        mStepArrayList= savedInstanceState.getParcelableArrayList("stepArrayList");
+//        mStepId= savedInstanceState.getInt("stepPosition");
+//        step= mStepArrayList.get(mStepId);
+//        if (step != null) {
+//            if (step.getVideoURL().length() > 0) {
+//                initializePlayer(Uri.parse(step.getVideoURL()));
+//            } else if (step.getThumbnailURL().length() > 0) {
+//                initializePlayer(Uri.parse(step.getThumbnailURL()));
+//            } else {
+//                initializePlayer(null);
+//            }
+//            return step;
+//        }
+//        return null;
+//    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        if(mExoPlayer != null){
-            mExoPlayer.stop();
-            mExoPlayer.release();
-            mExoPlayer= null;
-        }
-    }
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        if(mExoPlayer != null){
+//            mExoPlayer.stop();
+//            mExoPlayer.release();
+//            mExoPlayer= null;
+//        }
+//    }
+//
+//
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        Step step = null;
+//        if (mStepArrayList != null)
+//            step = mStepArrayList.get(mStepId);
+//        if (mExoPlayer == null) {
+//            if (step != null) {
+//                if (step.getVideoURL().length() > 0) {
+//                    initializePlayer(Uri.parse(step.getVideoURL()));
+//                } else if (step.getThumbnailURL().length() > 0) {
+//                    initializePlayer(Uri.parse(step.getThumbnailURL()));
+//                } else {
+//                    initializePlayer(null);
+//                }
+//
+//            }
+//
+//        }
+//    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Step step = null;
-        if (mStepArrayList != null)
-            step = mStepArrayList.get(mStepId);
-        if (mExoPlayer == null) {
-            if (step != null) {
-                if (step.getVideoURL().length() > 0) {
-                    initializePlayer(Uri.parse(step.getVideoURL()));
-                } else if (step.getVideoURL().length() > 0) {
-                    initializePlayer(Uri.parse(step.getThumbnailURL()));
-                } else {
-                    initializePlayer(null);
-                }
-
-            }
-
-        }
-    }
 
 }

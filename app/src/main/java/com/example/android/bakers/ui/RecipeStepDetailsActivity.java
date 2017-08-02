@@ -2,13 +2,11 @@ package com.example.android.bakers.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -18,7 +16,6 @@ import com.example.android.bakers.model.Step;
 import com.google.android.exoplayer2.ExoPlayer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,7 +31,6 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
     @BindView(R.id.btNext)
     Button btNext;
 
-    private ExoPlayer mExoPlayer;
     private int mStepId;
     private ArrayList<Step> mStepArrayList;
 
@@ -66,25 +62,21 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
-
-                int previousStepId= mStepId;
                 mStepId= position;
 
                 if(mStepArrayList != null){
                     Step step= mStepArrayList.get(mStepId);
                     if(step != null){
-                        if(step.getVideoURL() != null && step.getVideoURL().length()> 0){
-                            return;
-                        }else if(step.getThumbnailURL() != null && step.getThumbnailURL().length() > 0){
-                            return;
-                        }else {
-                            Toast.makeText(RecipeStepDetailsActivity.this, "No videos available", Toast.LENGTH_SHORT).show();
+                        if(!(step.getVideoURL().length() > 0 || step.getThumbnailURL().length() > 0))
+                        {
+                            Toast.makeText(RecipeStepDetailsActivity.this, "No video available", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
 
 
             }
+
 
             @Override
             public void onPageScrollStateChanged(int state) {
@@ -95,12 +87,9 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
         btPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mExoPlayer != null && mStepId != 0) {
-                    mExoPlayer.stop();
-                }
                 if(mStepId != 0)
                 {
-                    mPager.setCurrentItem(mStepId -1);
+                    mPager.setCurrentItem(--mStepId);
                 }
 
             }
@@ -108,11 +97,10 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
         btNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mExoPlayer != null && mStepId != mStepArrayList.size()-1)
-                    mExoPlayer.stop();
-                if(mStepArrayList != null && mStepId < mStepArrayList.size()-1){
+                if(mStepArrayList != null && mStepId != mStepArrayList.size()-1){
 
-                    mPager.setCurrentItem(mStepId + 1);
+                    mPager.setCurrentItem(++mStepId);
+
                 }
             }
         });
