@@ -93,7 +93,7 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
                 @Override
                 public void onClick(View v) {
                     if (mStepId != 0) {
-                        mPager.setCurrentItem(--mStepId);
+                        mPager.setCurrentItem(mStepId-1);
                     }
 
                 }
@@ -103,7 +103,7 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
                 public void onClick(View v) {
                     if (mStepArrayList != null && mStepId != mStepArrayList.size() - 1) {
 
-                        mPager.setCurrentItem(++mStepId);
+                        mPager.setCurrentItem(mStepId+1);
 
                     }
                 }

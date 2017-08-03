@@ -64,6 +64,8 @@ public class RecipeStepDetailsFragment extends Fragment {
     private boolean isVisible= false;
 
 
+
+
    public static RecipeStepDetailsFragment newInstance(int position, ArrayList<Step> stepArrayList) {
 
         Bundle args = new Bundle();
@@ -78,6 +80,7 @@ public class RecipeStepDetailsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Nullable
@@ -92,41 +95,8 @@ public class RecipeStepDetailsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(savedInstanceState == null) {
-            Bundle args = getArguments();
-            mStepId = args.getInt("stepPosition");
-            try {
-                mStepArrayList = args.getParcelableArrayList("stepArrayList");
-                if (mStepArrayList != null)
-                    mStep = mStepArrayList.get(mStepId);
-            } catch (ClassCastException e) {
-                e.printStackTrace();
-            }
-            if (isVisible) {
-                initializeVisibleFragment(mStep);
-            }
-        }else {
-            if (getResources().getConfiguration().orientation ==
-                    Configuration.ORIENTATION_LANDSCAPE) {
-                if(isVisible)
-                    setInitializePlayer(savedInstanceState);
-
-            }
-            if (getResources().getConfiguration().orientation
-                    == Configuration.ORIENTATION_PORTRAIT) {
-                if (isVisible) {
-                    Step pStep = setInitializePlayer(savedInstanceState);
-
-
-                    if (pStep != null) {
-                        String description = pStep.getDescription();
-                        if (description != null && description.length() > 0)
-                            tvRecipeStepDescription.setText(description);
-
-                        mStepId = pStep.getId();
-                    }
-                }
-            }
+        if(mExoPlayer == null){
+            initializeVisibleFragment(mStep);
         }
     }
 
@@ -136,12 +106,26 @@ public class RecipeStepDetailsFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser){
-            isVisible = true;
+            isVisible= true;
             if(mStep != null){
                 initializeVisibleFragment(mStep);
             }
+            else {
+                Bundle args = getArguments();
+                mStepId = args.getInt("stepPosition");
+                try {
+                    mStepArrayList = args.getParcelableArrayList("stepArrayList");
+                    if (mStepArrayList != null)
+                        mStep = mStepArrayList.get(mStepId);
+                } catch (ClassCastException e) {
+                    e.printStackTrace();
+                }
+                if(mStep != null) {
+                    initializeVisibleFragment(mStep);
+                }
+            }
         }else if(mExoPlayer != null){
-            mExoPlayer.stop();
+            mExoPlayer.setPlayWhenReady(false);
         }
 
     }
@@ -203,58 +187,49 @@ public class RecipeStepDetailsFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
 
-        outState.putInt("stepPosition", mStepId);
-        outState.putParcelableArrayList("stepArrayList", mStepArrayList);
 
-    }
-
-    private Step setInitializePlayer(Bundle savedInstanceState){
-        Step step;
-        mStepArrayList= savedInstanceState.getParcelableArrayList("stepArrayList");
-        mStepId= savedInstanceState.getInt("stepPosition");
-        step= mStepArrayList.get(mStepId);
-        if (step != null) {
-            if (step.getVideoURL().length() > 0) {
-                initializeVisibleFragment(step);
-            } else if (step.getThumbnailURL().length() > 0) {
-                initializeVisibleFragment(step);
-            } else {
-                initializeVisibleFragment(null);
-            }
-            return step;
-        }
-        return null;
-    }
-
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        if(mExoPlayer != null){
-//            mExoPlayer.stop();
-//            mExoPlayer.release();
-//            mExoPlayer= null;
+//    private Step initializePlayerFromSavedState(Bundle savedInstanceState){
+//        Step step;
+//        mStepArrayList= savedInstanceState.getParcelableArrayList("stepArrayList");
+//        mStepId= savedInstanceState.getInt("stepPosition");
+//        step= mStepArrayList.get(mStepId);
+//        if (step != null) {
+//            if (step.getVideoURL().length() > 0) {
+//                initializeVisibleFragment(step);
+//            } else if (step.getThumbnailURL().length() > 0) {
+//                initializeVisibleFragment(step);
+//            } else {
+//                initializeVisibleFragment(null);
+//            }
+//            return step;
 //        }
+//        return null;
 //    }
-//
-//
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mExoPlayer != null){
+            mExoPlayer.setPlayWhenReady(false);
+        }
+    }
+
+
 //    @Override
 //    public void onResume() {
 //        super.onResume();
 //        Step step = null;
 //        if (mStepArrayList != null)
 //            step = mStepArrayList.get(mStepId);
-//        if (mExoPlayer == null) {
+//        if (mExoPlayer == null && isVisible) {
 //            if (step != null) {
 //                if (step.getVideoURL().length() > 0) {
-//                    initializePlayer(Uri.parse(step.getVideoURL()));
+//                    initializeVisibleFragment(step);
 //                } else if (step.getThumbnailURL().length() > 0) {
-//                    initializePlayer(Uri.parse(step.getThumbnailURL()));
+//                    initializeVisibleFragment(step);
 //                } else {
-//                    initializePlayer(null);
+//                    initializeVisibleFragment(null);
 //                }
 //
 //            }
