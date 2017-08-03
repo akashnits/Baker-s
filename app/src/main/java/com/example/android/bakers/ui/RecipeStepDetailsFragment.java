@@ -92,17 +92,41 @@ public class RecipeStepDetailsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if(savedInstanceState == null) {
             Bundle args = getArguments();
-            mStepId= args.getInt("stepPosition");
+            mStepId = args.getInt("stepPosition");
             try {
-                mStepArrayList= args.getParcelableArrayList("stepArrayList");
-                if(mStepArrayList != null)
+                mStepArrayList = args.getParcelableArrayList("stepArrayList");
+                if (mStepArrayList != null)
                     mStep = mStepArrayList.get(mStepId);
             } catch (ClassCastException e) {
                 e.printStackTrace();
-        }
-        if(isVisible) {
-            initializeVisibleFragment(mStep);
+            }
+            if (isVisible) {
+                initializeVisibleFragment(mStep);
+            }
+        }else {
+            if (getResources().getConfiguration().orientation ==
+                    Configuration.ORIENTATION_LANDSCAPE) {
+                if(isVisible)
+                    setInitializePlayer(savedInstanceState);
+
+            }
+            if (getResources().getConfiguration().orientation
+                    == Configuration.ORIENTATION_PORTRAIT) {
+                if (isVisible) {
+                    Step pStep = setInitializePlayer(savedInstanceState);
+
+
+                    if (pStep != null) {
+                        String description = pStep.getDescription();
+                        if (description != null && description.length() > 0)
+                            tvRecipeStepDescription.setText(description);
+
+                        mStepId = pStep.getId();
+                    }
+                }
+            }
         }
     }
 
@@ -116,8 +140,12 @@ public class RecipeStepDetailsFragment extends Fragment {
             if(mStep != null){
                 initializeVisibleFragment(mStep);
             }
+        }else if(mExoPlayer != null){
+            mExoPlayer.stop();
         }
+
     }
+
 
     private void initializeVisibleFragment(Step step) {
 
@@ -131,27 +159,12 @@ public class RecipeStepDetailsFragment extends Fragment {
             }
 
             String description = step.getDescription();
-            if (description.length() > 0)
-                tvRecipeStepDescription.setText(description);
+            if (description.length() > 0) {
+                if(tvRecipeStepDescription != null){
+                    tvRecipeStepDescription.setText(description);
+                }
+            }
         }
-
-
-//        if (savedInstanceState != null && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//            setInitializePlayer(savedInstanceState);
-//
-//        }
-//        if (savedInstanceState != null && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-//            Step pStep = setInitializePlayer(savedInstanceState);
-//
-//
-//            if (pStep != null) {
-//                String description = pStep.getDescription();
-//                if (description != null && description.length() > 0)
-//                    tvRecipeStepDescription.setText(description);
-//
-//                mStepId = pStep.getId();
-//            }
-//        }
     }
 
     private void initializePlayer(Uri mediaUri){
@@ -174,7 +187,7 @@ public class RecipeStepDetailsFragment extends Fragment {
         }
     }
 
-    private void releasePlayer() {
+    public void releasePlayer() {
         if(mExoPlayer != null) {
             mExoPlayer.stop();
             mExoPlayer.release();
@@ -199,23 +212,23 @@ public class RecipeStepDetailsFragment extends Fragment {
 
     }
 
-//    private Step setInitializePlayer(Bundle savedInstanceState){
-//        Step step= null;
-//        mStepArrayList= savedInstanceState.getParcelableArrayList("stepArrayList");
-//        mStepId= savedInstanceState.getInt("stepPosition");
-//        step= mStepArrayList.get(mStepId);
-//        if (step != null) {
-//            if (step.getVideoURL().length() > 0) {
-//                initializePlayer(Uri.parse(step.getVideoURL()));
-//            } else if (step.getThumbnailURL().length() > 0) {
-//                initializePlayer(Uri.parse(step.getThumbnailURL()));
-//            } else {
-//                initializePlayer(null);
-//            }
-//            return step;
-//        }
-//        return null;
-//    }
+    private Step setInitializePlayer(Bundle savedInstanceState){
+        Step step;
+        mStepArrayList= savedInstanceState.getParcelableArrayList("stepArrayList");
+        mStepId= savedInstanceState.getInt("stepPosition");
+        step= mStepArrayList.get(mStepId);
+        if (step != null) {
+            if (step.getVideoURL().length() > 0) {
+                initializeVisibleFragment(step);
+            } else if (step.getThumbnailURL().length() > 0) {
+                initializeVisibleFragment(step);
+            } else {
+                initializeVisibleFragment(null);
+            }
+            return step;
+        }
+        return null;
+    }
 
 //    @Override
 //    public void onPause() {

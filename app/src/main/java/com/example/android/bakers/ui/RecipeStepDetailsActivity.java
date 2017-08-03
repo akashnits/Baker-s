@@ -1,7 +1,9 @@
 package com.example.android.bakers.ui;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -26,8 +28,10 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
     ViewPager mPager;
     @BindView(R.id.pager)
     ViewPager pager;
+    @Nullable
     @BindView(R.id.btPrevious)
     Button btPrevious;
+    @Nullable
     @BindView(R.id.btNext)
     Button btNext;
 
@@ -43,11 +47,11 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
         setContentView(R.layout.activity_recipe_step_details);
         ButterKnife.bind(this);
 
-        Intent intent= getIntent();
-        if(intent != null){
-            Bundle b= intent.getBundleExtra("data");
-            mStepId= b.getInt("stepPosition");
-            mStepArrayList= b.getParcelableArrayList("stepArrayList");
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle b = intent.getBundleExtra("data");
+            mStepId = b.getInt("stepPosition");
+            mStepArrayList = b.getParcelableArrayList("stepArrayList");
         }
 
         mAdapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -62,14 +66,14 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
-                mStepId= position;
+                mStepId = position;
 
-                if(mStepArrayList != null){
-                    Step step= mStepArrayList.get(mStepId);
-                    if(step != null){
-                        if(!(step.getVideoURL().length() > 0 || step.getThumbnailURL().length() > 0))
-                        {
-                            Toast.makeText(RecipeStepDetailsActivity.this, "No video available", Toast.LENGTH_SHORT).show();
+                if (mStepArrayList != null) {
+                    Step step = mStepArrayList.get(mStepId);
+                    if (step != null) {
+                        if (!(step.getVideoURL().length() > 0 || step.getThumbnailURL().length() > 0)) {
+                            Toast.makeText(RecipeStepDetailsActivity.this,
+                                    "No video available", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -84,26 +88,27 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
             }
         });
 
-        btPrevious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mStepId != 0)
-                {
-                    mPager.setCurrentItem(--mStepId);
-                }
-
-            }
-        });
-        btNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mStepArrayList != null && mStepId != mStepArrayList.size()-1){
-
-                    mPager.setCurrentItem(++mStepId);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            btPrevious.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mStepId != 0) {
+                        mPager.setCurrentItem(--mStepId);
+                    }
 
                 }
-            }
-        });
+            });
+            btNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mStepArrayList != null && mStepId != mStepArrayList.size() - 1) {
+
+                        mPager.setCurrentItem(++mStepId);
+
+                    }
+                }
+            });
+        }
     }
 
 
