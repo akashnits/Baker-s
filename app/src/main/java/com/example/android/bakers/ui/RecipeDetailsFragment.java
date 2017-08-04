@@ -71,8 +71,18 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
         rvRecipeDetails.hasFixedSize();
 
         rvRecipeDetails.setAdapter(mAdapter);
+        if(mTwoPane){
+        getActivity().findViewById(R.id.videoDescriptionFragment_container).setVisibility(View.VISIBLE);
 
+        if(savedInstanceState == null) {
+            RecipeStepDetailsFragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(0,
+                    (ArrayList<Step>) mRecipe.getSteps());
 
+            FragmentManager fm = getFragmentManager();
+            fm.beginTransaction().replace(R.id.videoDescriptionFragment_container,
+                    recipeStepDetailsFragment).commit();
+        }
+        }
     }
 
     @Override

@@ -106,11 +106,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
     public void onRecipeClickListener(int position) {
         Bundle b = new Bundle();
         b.putParcelable("recipeData", mRecipeList.get(position));
-        if(!mTwoPane){
-        ((MainActivity) getActivity()).showRecipeDetailsFragment(b);}
-        else {
-
-        }
+        ((MainActivity) getActivity()).showRecipeDetailsFragment(b);
     }
 
     @Override

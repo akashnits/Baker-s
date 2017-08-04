@@ -14,31 +14,64 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private boolean mTwoPane = false;
+    private boolean alreadyVisited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mTwoPane = getResources().getBoolean(R.bool.twoPaneMode);
 
-
-        if(savedInstanceState == null){
-            RecipeFragment recipeFragment= new RecipeFragment();
-            FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
+        if (savedInstanceState == null) {
+            RecipeFragment recipeFragment = new RecipeFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
             fragmentTransaction.replace(R.id.fragment_container, recipeFragment);
-            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.addToBackStack("recipeFragment");
             fragmentTransaction.commit();
 
         }
     }
 
-    public void showRecipeDetailsFragment(Bundle b){
-        RecipeDetailsFragment recipeDetailsFragment= new RecipeDetailsFragment();
+    public void showRecipeDetailsFragment(Bundle b) {
+        RecipeDetailsFragment recipeDetailsFragment = new RecipeDetailsFragment();
         recipeDetailsFragment.setArguments(b);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeDetailsFragment)
-        .addToBackStack(null)
-        .commit();
+                .addToBackStack("recipeDetailsFragment")
+                .commit();
     }
 
+
+
+    @Override
+    public void onBackPressed() {
+        int count = getFragmentManager().getBackStackEntryCount();
+        FragmentManager fm = getSupportFragmentManager();
+        if (!mTwoPane) {
+            if (count == 0) {
+                super.onBackPressed();
+                if (fm.findFragmentById(R.id.fragment_container) == null) {
+                    finish();
+                }
+            } else {
+                getFragmentManager().popBackStack();
+            }
+        } else {
+            Fragment f = fm.findFragmentById(R.id.videoDescriptionFragment_container);
+
+            if (f instanceof RecipeStepDetailsFragment) {
+                this.findViewById(R.id.videoDescriptionFragment_container).setVisibility(View.GONE);
+            if (count == 0) {
+                super.onBackPressed();
+                if (fm.findFragmentById(R.id.fragment_container) == null) {
+                    finish();
+                }
+            } else {
+                    getFragmentManager().popBackStack();
+                }
+            }
+        }
+    }
 }
