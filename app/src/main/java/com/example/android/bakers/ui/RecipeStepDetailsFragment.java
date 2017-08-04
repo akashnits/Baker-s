@@ -166,8 +166,6 @@ public class RecipeStepDetailsFragment extends Fragment {
                 mExoPlayer.prepare(loopingSource);
                 mExoPlayer.setPlayWhenReady(false);
             }
-        }else {
-            Toast.makeText(getContext(), "No video available", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -187,26 +185,6 @@ public class RecipeStepDetailsFragment extends Fragment {
         unbinder.unbind();
     }
 
-
-
-//    private Step initializePlayerFromSavedState(Bundle savedInstanceState){
-//        Step step;
-//        mStepArrayList= savedInstanceState.getParcelableArrayList("stepArrayList");
-//        mStepId= savedInstanceState.getInt("stepPosition");
-//        step= mStepArrayList.get(mStepId);
-//        if (step != null) {
-//            if (step.getVideoURL().length() > 0) {
-//                initializeVisibleFragment(step);
-//            } else if (step.getThumbnailURL().length() > 0) {
-//                initializeVisibleFragment(step);
-//            } else {
-//                initializeVisibleFragment(null);
-//            }
-//            return step;
-//        }
-//        return null;
-//    }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -214,28 +192,4 @@ public class RecipeStepDetailsFragment extends Fragment {
             mExoPlayer.setPlayWhenReady(false);
         }
     }
-
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        Step step = null;
-//        if (mStepArrayList != null)
-//            step = mStepArrayList.get(mStepId);
-//        if (mExoPlayer == null && isVisible) {
-//            if (step != null) {
-//                if (step.getVideoURL().length() > 0) {
-//                    initializeVisibleFragment(step);
-//                } else if (step.getThumbnailURL().length() > 0) {
-//                    initializeVisibleFragment(step);
-//                } else {
-//                    initializeVisibleFragment(null);
-//                }
-//
-//            }
-//
-//        }
-//    }
-
-
 }

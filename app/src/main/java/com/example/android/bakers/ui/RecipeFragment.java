@@ -3,6 +3,7 @@ package com.example.android.bakers.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.android.bakers.R;
 import com.example.android.bakers.adapters.RecipeAdapter;
@@ -36,6 +38,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
     private ApiService apiService;
     private RecyclerView rvRecipe;
     private List<Recipe> mRecipeList;
+    private boolean twoPaneLayout;
 
 
     public RecipeFragment() {
@@ -52,8 +55,9 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-         apiService= retrofit.create(ApiService.class);
-            return view;
+        apiService= retrofit.create(ApiService.class);
+        twoPaneLayout= getResources().getBoolean(R.bool.twoPaneMode);
+        return view;
     }
 
     @Override
@@ -69,12 +73,17 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
                 if(response.isSuccessful()){
                     mRecipeList = response.body();
                     RecipeAdapter recipeAdapter= new RecipeAdapter(getContext(), mRecipeList, RecipeFragment.this);
-                    LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-                    rvRecipe.setLayoutManager(linearLayoutManager);
+
+                    if(twoPaneLayout){
+                        GridLayoutManager gridLayoutManager= new GridLayoutManager(getContext(), 3);
+                        rvRecipe.setLayoutManager(gridLayoutManager);
+                    }else{
+                        LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                        rvRecipe.setLayoutManager(linearLayoutManager);
+                    }
                     rvRecipe.setAdapter(recipeAdapter);
                 }
             }
-
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
                 Log.v(TAG, "Failed to load");
