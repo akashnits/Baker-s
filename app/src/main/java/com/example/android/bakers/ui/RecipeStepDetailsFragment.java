@@ -62,6 +62,7 @@ public class RecipeStepDetailsFragment extends Fragment {
     private ArrayList<Step> mStepArrayList;
     private Step mStep;
     private boolean isVisible= false;
+    private boolean mTwoPane;
 
 
 
@@ -81,6 +82,7 @@ public class RecipeStepDetailsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        mTwoPane= getResources().getBoolean(R.bool.twoPaneMode);
     }
 
     @Nullable
@@ -95,8 +97,26 @@ public class RecipeStepDetailsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(mExoPlayer == null){
-            initializeVisibleFragment(mStep);
+        if(!mTwoPane) {
+            if (mExoPlayer == null) {
+                initializeVisibleFragment(mStep);
+            }
+        }else {
+            Bundle args = getArguments();
+            mStepId = args.getInt("stepPosition");
+            try {
+                mStepArrayList = args.getParcelableArrayList("stepArrayList");
+                if (mStepArrayList != null)
+                    mStep = mStepArrayList.get(mStepId);
+            } catch (ClassCastException e) {
+                e.printStackTrace();
+            }
+            if(mStep != null) {
+                initializeVisibleFragment(mStep);
+            }
+            if(mExoPlayer == null){
+                Toast.makeText(getContext(), "No Video Available", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -192,4 +212,5 @@ public class RecipeStepDetailsFragment extends Fragment {
             mExoPlayer.setPlayWhenReady(false);
         }
     }
+
 }

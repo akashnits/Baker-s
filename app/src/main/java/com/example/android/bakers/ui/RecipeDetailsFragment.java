@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.widget.ProgressBar;
 import com.example.android.bakers.R;
 import com.example.android.bakers.adapters.RecipeDetailsAdapter;
 import com.example.android.bakers.model.Recipe;
+import com.example.android.bakers.model.Step;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,13 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
 
     private RecipeDetailsAdapter mAdapter;
     private Recipe mRecipe;
+    private boolean mTwoPane= false;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     @Nullable
     @Override
@@ -43,6 +52,7 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
         View view = inflater.inflate(R.layout.recipe_details_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        mTwoPane= getResources().getBoolean(R.bool.twoPaneMode);
         return view;
     }
 
@@ -62,18 +72,28 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
 
         rvRecipeDetails.setAdapter(mAdapter);
 
+
     }
 
     @Override
     public void onRecipeStepClickListener(int position, int numberOfIngredients) {
-        int actualPosition= position- numberOfIngredients;
         Bundle b= new Bundle();
-        b.putParcelableArrayList("stepArrayList", (ArrayList<? extends Parcelable>) mRecipe.getSteps());
+        ArrayList<Step> stepArrayList= (ArrayList<Step>) mRecipe.getSteps();
+        int actualPosition= position- numberOfIngredients;
+        b.putParcelableArrayList("stepArrayList", stepArrayList);
         b.putInt("stepPosition", actualPosition);
+        if(!mTwoPane) {
+            Intent intent = new Intent(getActivity(), RecipeStepDetailsActivity.class);
+            intent.putExtra("data", b);
+            startActivity(intent);
+        }else {
+            RecipeStepDetailsFragment recipeStepDetailsFragment= RecipeStepDetailsFragment.newInstance(actualPosition,
+                    stepArrayList);
 
-        Intent intent= new Intent(getActivity(), RecipeStepDetailsActivity.class);
-        intent.putExtra("data", b);
-        startActivity(intent);
+            FragmentManager fm= getFragmentManager();
+            fm.beginTransaction().replace(R.id.videoDescriptionFragment_container,
+                    recipeStepDetailsFragment).commit();
+        }
     }
 
     @Override
