@@ -2,6 +2,7 @@ package com.example.android.bakers.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,12 +17,16 @@ import com.example.android.bakers.R;
 import com.example.android.bakers.adapters.RecipeAdapter;
 import com.example.android.bakers.model.Recipe;
 import com.example.android.bakers.utils.ApiService;
+import com.jakewharton.espresso.OkHttp3IdlingResource;
+
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,6 +47,8 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
     private List<Recipe> mRecipeList;
     private boolean twoPaneLayout;
     private boolean mTwoPane= false;
+    private static IdlingResource mResource;
+
 
 
     public RecipeFragment() {
@@ -59,8 +66,17 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recipe_fragment, container, false);
+
+        OkHttpClient client= new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+
+        mResource= OkHttp3IdlingResource.create("OkHttp", client);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://d17h27t6h515a5.cloudfront.net/")
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -113,5 +129,9 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    public static IdlingResource getmResource(){
+        return mResource;
     }
 }
