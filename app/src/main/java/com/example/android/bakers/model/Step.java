@@ -27,6 +27,14 @@ import com.google.gson.annotations.SerializedName;
         @Expose
         private String thumbnailURL;
 
+        public Step(Integer id, String shortDescription, String description, String videoURL, String thumbnailURL) {
+            this.id = id;
+            this.shortDescription = shortDescription;
+            this.description = description;
+            this.videoURL = videoURL;
+            this.thumbnailURL = thumbnailURL;
+        }
+
         public Integer getId() {
             return id;
         }
