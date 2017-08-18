@@ -12,11 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.android.bakers.R;
 import com.example.android.bakers.adapters.RecipeAdapter;
 import com.example.android.bakers.model.Recipe;
 import com.example.android.bakers.utils.ApiService;
+import com.example.android.bakers.widget.UpdateWidgetService;
 import com.jakewharton.espresso.OkHttp3IdlingResource;
 
 
@@ -121,8 +123,10 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
     @Override
     public void onRecipeClickListener(int position) {
         Bundle b = new Bundle();
-        b.putParcelable("recipeData", mRecipeList.get(position));
+        Recipe recipe= mRecipeList.get(position);
+        b.putParcelable("recipeData",recipe);
         ((MainActivity) getActivity()).showRecipeDetailsFragment(b);
+        UpdateWidgetService.startUpdatingWidget(getContext(), recipe);
     }
 
     @Override
