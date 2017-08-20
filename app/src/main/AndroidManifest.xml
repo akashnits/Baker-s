@@ -29,7 +29,7 @@
                 android:resource="@xml/recipe_ingredient_widget_info" />
         </receiver>
         <service android:name=".widget.UpdateWidgetService"></service>
-        <service android:name=".widget.ListWidgetService"/>
+        <service android:name=".widget.ListWidgetService"></service>
     </application>
 
 </manifest>

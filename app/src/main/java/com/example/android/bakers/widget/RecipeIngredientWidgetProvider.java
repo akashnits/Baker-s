@@ -8,26 +8,32 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.example.android.bakers.R;
+import com.example.android.bakers.model.Recipe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class RecipeIngredientWidgetProvider extends AppWidgetProvider {
 
-    private static RemoteViews getIngredientListRemoteView(Context context){
+    private static RemoteViews getIngredientListRemoteView(Context context, List<String> ingredientName){
+
         RemoteViews views= new RemoteViews(context.getPackageName(), R.layout.widget_list_view);
         Intent intent= new Intent(context, ListWidgetService.class);
+        intent.putStringArrayListExtra("ingredientName", (ArrayList<String>) ingredientName);
         views.setRemoteAdapter(R.id.widget_list_view, intent);
         views.setEmptyView(R.id.widget_list_view, R.id.empty_view);
         return views;
     }
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, List<String> ingredientName,
                                 int[] appWidgetIds) {
 
         for(int appWidgetId: appWidgetIds) {
             // Construct the RemoteViews object
-            RemoteViews views = getIngredientListRemoteView(context);
+            RemoteViews views = getIngredientListRemoteView(context, ingredientName);
             Log.v("", "updating widget");
 
             // Instruct the widget manager to update the widget

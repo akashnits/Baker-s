@@ -15,8 +15,11 @@ import java.util.List;
 
 public class ListWidgetService extends RemoteViewsService {
 
+    static Intent mIntent;
+
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
+        mIntent= intent;
         return new ListRemoteViewsFactory(this.getApplicationContext());
     }
 }
@@ -24,9 +27,10 @@ public class ListWidgetService extends RemoteViewsService {
 class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 
     private Context mContext;
-    private Recipe mRecipe;
+    private List<String> mIngredientName;
 
     public ListRemoteViewsFactory(Context context) {
+
         this.mContext = context;
     }
 
@@ -37,7 +41,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 
     @Override
     public void onDataSetChanged() {
-        mRecipe= UpdateWidgetService.getmRecipe();
+        mIngredientName= ListWidgetService.mIntent.getStringArrayListExtra("ingredientName");
     }
 
     @Override
@@ -47,17 +51,16 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 
     @Override
     public int getCount() {
-        if(mRecipe == null)
+        if(mIngredientName == null)
             return 0;
-        return mRecipe.getIngredients().size();
+        return mIngredientName.size();
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
         RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.recipe_ingredient_widget);
-        List<Ingredient> ingredientList= mRecipe.getIngredients();
 
-        views.setTextViewText(R.id.appwidget_text, ingredientList.get(position).getIngredient());
+        views.setTextViewText(R.id.appwidget_text, mIngredientName.get(position));
         Log.v("", "getViewAtCalled");
         return views;
     }

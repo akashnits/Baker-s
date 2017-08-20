@@ -16,12 +16,14 @@ import android.widget.Toast;
 
 import com.example.android.bakers.R;
 import com.example.android.bakers.adapters.RecipeAdapter;
+import com.example.android.bakers.model.Ingredient;
 import com.example.android.bakers.model.Recipe;
 import com.example.android.bakers.utils.ApiService;
 import com.example.android.bakers.widget.UpdateWidgetService;
 import com.jakewharton.espresso.OkHttp3IdlingResource;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -126,7 +128,13 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
         Recipe recipe= mRecipeList.get(position);
         b.putParcelable("recipeData",recipe);
         ((MainActivity) getActivity()).showRecipeDetailsFragment(b);
-        UpdateWidgetService.startUpdatingWidget(getContext(), recipe);
+        List<Ingredient> ingredientList= recipe.getIngredients();
+        List<String> ingredientName= new ArrayList<>();
+
+        for(int i=0; i < ingredientList.size(); i++){
+            ingredientName.add(ingredientList.get(i).getIngredient());
+        }
+        UpdateWidgetService.startUpdatingWidget(getContext(), ingredientName);
     }
 
     @Override

@@ -11,22 +11,25 @@ import android.widget.Toast;
 import com.example.android.bakers.R;
 import com.example.android.bakers.model.Recipe;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class UpdateWidgetService extends IntentService {
 
     public static String ACTION_UPDATE_WIDGET= "com.example.android.bakers.widget.action.update_widget";
 
-    private static Recipe mRecipe;
+
 
 
     public UpdateWidgetService() {
         super("UpdateWidgetService");
     }
 
-    public static void startUpdatingWidget(Context context, Recipe recipe){
-        mRecipe= recipe;
+    public static void startUpdatingWidget(Context context, List<String> ingredientName){
         Intent intent= new Intent(context, UpdateWidgetService.class);
         intent.setAction(ACTION_UPDATE_WIDGET);
+        intent.putStringArrayListExtra("ingredientName", (ArrayList<String>) ingredientName);
         context.startService(intent);
 }
 
@@ -35,15 +38,12 @@ public class UpdateWidgetService extends IntentService {
         if (intent != null) {
             if (intent.getAction().equals(ACTION_UPDATE_WIDGET)) {
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-
+                Log.v("", "onHandledIntent called");
                 int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, RecipeIngredientWidgetProvider.class));
                 appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list_view);
-                RecipeIngredientWidgetProvider.updateAppWidget(this, appWidgetManager, appWidgetIds);
+                List<String> ingredientName= intent.getStringArrayListExtra("ingredientName");
+                RecipeIngredientWidgetProvider.updateAppWidget(this, appWidgetManager,ingredientName, appWidgetIds);
             }
         }
-    }
-
-    public static Recipe getmRecipe() {
-        return mRecipe;
     }
 }
