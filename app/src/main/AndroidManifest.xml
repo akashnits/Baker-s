@@ -28,8 +28,10 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/recipe_ingredient_widget_info" />
         </receiver>
-        <service android:name=".widget.UpdateWidgetService"></service>
-        <service android:name=".widget.ListWidgetService"></service>
+        <service android:name=".widget.UpdateWidgetService"
+            android:stopWithTask="false"></service>
+        <service android:name=".widget.ListWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
     </application>
 
 </manifest>

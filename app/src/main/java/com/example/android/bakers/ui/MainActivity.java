@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.android.bakers.R;
+import com.example.android.bakers.widget.UpdateWidgetService;
 
 import java.util.List;
 

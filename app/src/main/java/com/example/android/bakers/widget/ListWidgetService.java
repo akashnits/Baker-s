@@ -15,11 +15,9 @@ import java.util.List;
 
 public class ListWidgetService extends RemoteViewsService {
 
-    static Intent mIntent;
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        mIntent= intent;
         return new ListRemoteViewsFactory(this.getApplicationContext());
     }
 }
@@ -27,7 +25,7 @@ public class ListWidgetService extends RemoteViewsService {
 class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 
     private Context mContext;
-    private List<String> mIngredientName;
+    private List<String> ingredientNameList;
 
     public ListRemoteViewsFactory(Context context) {
 
@@ -41,7 +39,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 
     @Override
     public void onDataSetChanged() {
-        mIngredientName= ListWidgetService.mIntent.getStringArrayListExtra("ingredientName");
+        ingredientNameList= RecipeIngredientWidgetProvider.mIngredientNameList;
     }
 
     @Override
@@ -51,16 +49,16 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 
     @Override
     public int getCount() {
-        if(mIngredientName == null)
+        if(ingredientNameList == null)
             return 0;
-        return mIngredientName.size();
+        return ingredientNameList.size();
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
         RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.recipe_ingredient_widget);
 
-        views.setTextViewText(R.id.appwidget_text, mIngredientName.get(position));
+        views.setTextViewText(R.id.appwidget_text, ingredientNameList.get(position));
         Log.v("", "getViewAtCalled");
         return views;
     }
@@ -72,16 +70,16 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 
     @Override
     public int getViewTypeCount() {
-        return 0;
+        return 1;
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 }

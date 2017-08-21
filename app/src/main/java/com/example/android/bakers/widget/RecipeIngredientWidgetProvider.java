@@ -18,24 +18,24 @@ import java.util.List;
  */
 public class RecipeIngredientWidgetProvider extends AppWidgetProvider {
 
-    private static RemoteViews getIngredientListRemoteView(Context context, List<String> ingredientName){
+    static List<String> mIngredientNameList;
+
+    private static RemoteViews getIngredientListRemoteView(Context context){
 
         RemoteViews views= new RemoteViews(context.getPackageName(), R.layout.widget_list_view);
         Intent intent= new Intent(context, ListWidgetService.class);
-        intent.putStringArrayListExtra("ingredientName", (ArrayList<String>) ingredientName);
         views.setRemoteAdapter(R.id.widget_list_view, intent);
         views.setEmptyView(R.id.widget_list_view, R.id.empty_view);
         return views;
     }
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, List<String> ingredientName,
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, List<String> ingredientNameList,
                                 int[] appWidgetIds) {
 
         for(int appWidgetId: appWidgetIds) {
             // Construct the RemoteViews object
-            RemoteViews views = getIngredientListRemoteView(context, ingredientName);
-            Log.v("", "updating widget");
-
+            mIngredientNameList= ingredientNameList;
+            RemoteViews views = getIngredientListRemoteView(context);
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }

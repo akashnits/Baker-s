@@ -129,12 +129,12 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
         b.putParcelable("recipeData",recipe);
         ((MainActivity) getActivity()).showRecipeDetailsFragment(b);
         List<Ingredient> ingredientList= recipe.getIngredients();
-        List<String> ingredientName= new ArrayList<>();
+        List<String> ingredientNameList= new ArrayList<>();
 
         for(int i=0; i < ingredientList.size(); i++){
-            ingredientName.add(ingredientList.get(i).getIngredient());
+            ingredientNameList.add(ingredientList.get(i).getIngredient());
         }
-        UpdateWidgetService.startUpdatingWidget(getContext(), ingredientName);
+        UpdateWidgetService.startUpdatingWidget(getContext(), ingredientNameList);
     }
 
     @Override

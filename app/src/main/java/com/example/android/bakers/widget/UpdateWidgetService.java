@@ -20,16 +20,17 @@ public class UpdateWidgetService extends IntentService {
     public static String ACTION_UPDATE_WIDGET= "com.example.android.bakers.widget.action.update_widget";
 
 
-
+    private int[] mAppWidgetIds;
+    private AppWidgetManager mAppWidgetManager;
 
     public UpdateWidgetService() {
         super("UpdateWidgetService");
     }
 
-    public static void startUpdatingWidget(Context context, List<String> ingredientName){
+    public static void startUpdatingWidget(Context context, List<String> ingredientNameList){
         Intent intent= new Intent(context, UpdateWidgetService.class);
         intent.setAction(ACTION_UPDATE_WIDGET);
-        intent.putStringArrayListExtra("ingredientName", (ArrayList<String>) ingredientName);
+        intent.putStringArrayListExtra("ingredientNameList", (ArrayList<String>) ingredientNameList);
         context.startService(intent);
 }
 
@@ -37,13 +38,19 @@ public class UpdateWidgetService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             if (intent.getAction().equals(ACTION_UPDATE_WIDGET)) {
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-                Log.v("", "onHandledIntent called");
-                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, RecipeIngredientWidgetProvider.class));
-                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list_view);
-                List<String> ingredientName= intent.getStringArrayListExtra("ingredientName");
-                RecipeIngredientWidgetProvider.updateAppWidget(this, appWidgetManager,ingredientName, appWidgetIds);
+                mAppWidgetManager = AppWidgetManager.getInstance(this);
+                mAppWidgetIds = mAppWidgetManager.getAppWidgetIds(new ComponentName(this, RecipeIngredientWidgetProvider.class));
+                mAppWidgetManager.notifyAppWidgetViewDataChanged(mAppWidgetIds, R.id.widget_list_view);
+                List<String> ingredientNameList= intent.getStringArrayListExtra("ingredientNameList");
+                RecipeIngredientWidgetProvider.updateAppWidget(this, mAppWidgetManager,ingredientNameList, mAppWidgetIds);
             }
         }
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+
+        RecipeIngredientWidgetProvider.updateAppWidget(this, mAppWidgetManager, null, mAppWidgetIds);
+        stopSelf();
     }
 }
