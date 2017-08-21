@@ -48,10 +48,10 @@ public class UpdateWidgetService extends IntentService {
     }
 
     @Override
-    public void onTaskRemoved(Intent rootIntent) {
+    public void onTaskRemoved(Intent intent) {
 
         RecipeIngredientWidgetProvider.updateAppWidget(this, mAppWidgetManager, null, mAppWidgetIds);
         stopSelf();
-        super.onTaskRemoved(rootIntent);
+        super.onTaskRemoved(intent);
     }
 }
