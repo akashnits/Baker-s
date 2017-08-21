@@ -52,5 +52,6 @@ public class UpdateWidgetService extends IntentService {
 
         RecipeIngredientWidgetProvider.updateAppWidget(this, mAppWidgetManager, null, mAppWidgetIds);
         stopSelf();
+        super.onTaskRemoved(rootIntent);
     }
 }
