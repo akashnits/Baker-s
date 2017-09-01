@@ -2,4 +2,8 @@
     <string name="app_name">Baker\'s</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="NutellaPieImage">http://honestcooking.com/wp-content/uploads/2013/09/p8010158.jpg</string>
+    <string name="BrowniesImage">http://d2gk7xgygi98cy.cloudfront.net/204-3-large.jpg</string>
+    <string name="YellowCakeImage">https://media3.s-nbcnews.com/j/newscms/2015_50/891651/09_cherpumple_finished_17cacd9997691f4235907ed3e6db473c.today-inline-large.jpg</string>
+    <string name="CheeseCakeImage">https://www.thecheesecakefactory.com/assets/images/Menu-Import/CCF_FreshStrawberryCheesecake.jpg</string>
 </resources>

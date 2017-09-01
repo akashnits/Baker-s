@@ -25,12 +25,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     private List<Recipe> mRecipe;
     private Context mContext;
     private OnRecipeClickHandler mHandler;
-    private String[] imageUrls=
-            new String[]{"http://www.singforyoursupperblog.com/wp271/wp-content/uploads/2010/05/nutellapie2.jpg",
-            "https://cafedelites.com/wp-content/uploads/2016/08/Fudgy-Cocoa-Brownies-35.jpg",
-            "https://fthmb.tqn.com/eYYVIcxm9p-V1d2CuRiuyL9JHXA=/960x0/filters:no_upscale()/about/yellow-cake-56a2145f3df78cf77271c1c6.jpg",
-                    "https://www.bbcgoodfood.com/sites/default/files/styles/recipe/public/user-collections/my-colelction-image/2015/12/recipe-image-legacy-id--1001487_11.jpg?itok=rUW9cFzU"};
-
+    private String[] imageUrls;
 
     public interface OnRecipeClickHandler{
          void onRecipeClickListener(int position);
@@ -40,6 +35,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         this.mRecipe = mRecipe;
         this.mContext = mContext;
         this.mHandler= onRecipeClickHandler;
+        imageUrls=
+                new String[]{mContext.getString(R.string.NutellaPieImage),
+                        mContext.getString(R.string.BrowniesImage),
+                        mContext.getString(R.string.YellowCakeImage),
+                        mContext.getString(R.string.CheeseCakeImage)};
+
     }
 
     @Override
