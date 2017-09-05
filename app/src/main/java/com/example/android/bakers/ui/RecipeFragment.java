@@ -96,7 +96,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        pbLoadingIndicator.setVisibility(View.VISIBLE);
 
         Call<List<Recipe>> call = apiService.getRecipes();
 
@@ -116,6 +116,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
                     }
                     rvRecipe.setAdapter(recipeAdapter);
                 }
+                pbLoadingIndicator.setVisibility(View.GONE);
             }
 
             @Override

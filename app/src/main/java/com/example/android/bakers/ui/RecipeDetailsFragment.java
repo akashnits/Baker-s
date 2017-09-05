@@ -41,12 +41,7 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
     @BindView(R.id.pb_loading_indicator)
     ProgressBar pbLoadingIndicator;
     Unbinder unbinder;
-    @BindView(R.id.backdrop)
-    ImageView backdrop;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.collapsing_toolbar_layout)
-    CollapsingToolbarLayout collapsingToolbarLayout;
+
 
     private RecipeDetailsAdapter mAdapter;
     private Recipe mRecipe;
@@ -75,7 +70,9 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null || savedInstanceState != null) {
-            actionBar.hide();
+            if(!mTwoPane) {
+                actionBar.hide();
+            }
         }
         Bundle args = getArguments();
         try {
@@ -87,9 +84,6 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvRecipeDetails.setLayoutManager(linearLayoutManager);
         rvRecipeDetails.hasFixedSize();
-        collapsingToolbarLayout.setTitle(mRecipe.getName());
-        collapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
-        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
 
         rvRecipeDetails.setAdapter(mAdapter);
         if (mTwoPane) {
@@ -103,6 +97,13 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
                 fm.beginTransaction().replace(R.id.videoDescriptionFragment_container,
                         recipeStepDetailsFragment).commit();
             }
+        }
+        else{
+            CollapsingToolbarLayout collapsingToolbarLayout= (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_layout);
+
+            collapsingToolbarLayout.setTitle(mRecipe.getName());
+            collapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
+            collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
         }
     }
 
@@ -137,9 +138,11 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
     public void onDestroyView() {
         super.onDestroyView();
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.show();
-        }
+            if (mTwoPane) {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
+            } else if(actionBar != null){
+                actionBar.show();
+            }
         unbinder.unbind();
     }
 }
