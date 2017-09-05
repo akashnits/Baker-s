@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecipeStepDetailsActivity extends FragmentActivity {
+public class RecipeStepDetailsActivity extends AppCompatActivity {
 
     ViewPagerAdapter mAdapter;
     ViewPager mPager;
@@ -37,6 +38,7 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
 
     private int mStepId;
     private ArrayList<Step> mStepArrayList;
+    private String mRecipeName;
 
 
 
@@ -51,6 +53,7 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
         if (intent != null) {
             Bundle b = intent.getBundleExtra("data");
             mStepId = b.getInt("stepPosition");
+            mRecipeName= b.getString("recipeName");
             mStepArrayList = b.getParcelableArrayList("stepArrayList");
         }
 
@@ -119,7 +122,7 @@ public class RecipeStepDetailsActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-                return RecipeStepDetailsFragment.newInstance(position, mStepArrayList);
+                return RecipeStepDetailsFragment.newInstance(position, mStepArrayList, mRecipeName);
         }
 
         @Override

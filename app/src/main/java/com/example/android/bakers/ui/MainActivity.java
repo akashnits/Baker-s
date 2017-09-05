@@ -16,7 +16,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private boolean mTwoPane = false;
-    private boolean alreadyVisited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

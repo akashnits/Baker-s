@@ -34,7 +34,7 @@ public class RecipeDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public interface OnRecipeStepClickHandler{
-        void onRecipeStepClickListener(int position, int numberOfIngredients);
+        void onRecipeStepClickListener(int position, int numberOfIngredients, View v);
     }
 
     @Override
@@ -132,7 +132,7 @@ public class RecipeDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             tvStepShortDescription.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mHandler.onRecipeStepClickListener(getAdapterPosition(), mNumberOfIngredients);
+                    mHandler.onRecipeStepClickListener(getAdapterPosition(), mNumberOfIngredients, v);
                 }
             });
         }

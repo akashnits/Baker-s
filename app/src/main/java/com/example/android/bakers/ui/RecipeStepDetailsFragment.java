@@ -7,6 +7,8 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,11 +69,12 @@ public class RecipeStepDetailsFragment extends Fragment {
 
 
 
-   public static RecipeStepDetailsFragment newInstance(int position, ArrayList<Step> stepArrayList) {
+   public static RecipeStepDetailsFragment newInstance(int position, ArrayList<Step> stepArrayList, String recipeName) {
 
         Bundle args = new Bundle();
         args.putInt("stepPosition", position);
         args.putParcelableArrayList("stepArrayList", stepArrayList);
+        args.putString("recipeName", recipeName);
 
         RecipeStepDetailsFragment fragment = new RecipeStepDetailsFragment();
         fragment.setArguments(args);
@@ -96,6 +99,10 @@ public class RecipeStepDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ActionBar actionBar= ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(getArguments().getString("recipeName"));
+        }
 
         if(!mTwoPane) {
             if (mExoPlayer == null) {
@@ -182,7 +189,7 @@ public class RecipeStepDetailsFragment extends Fragment {
                 String userAgent = Util.getUserAgent(getContext(), "Baker's");
                 MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                                             getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
-                LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource, 5);
+                LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource, 2);
                 mExoPlayer.prepare(loopingSource);
                 mExoPlayer.setPlayWhenReady(false);
             }
