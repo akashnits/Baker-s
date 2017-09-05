@@ -6,4 +6,17 @@
     <string name="BrowniesImage">http://d2gk7xgygi98cy.cloudfront.net/204-3-large.jpg</string>
     <string name="YellowCakeImage">https://media3.s-nbcnews.com/j/newscms/2015_50/891651/09_cherpumple_finished_17cacd9997691f4235907ed3e6db473c.today-inline-large.jpg</string>
     <string name="CheeseCakeImage">https://www.thecheesecakefactory.com/assets/images/Menu-Import/CCF_FreshStrawberryCheesecake.jpg</string>
+    <string name="Steps">Steps:</string>
+    <string name="recipeFragment">recipeFragment</string>
+    <string name="recipeDetailsFragment">recipeDetailsFragment</string>
+    <string name="recipeData">recipeData</string>
+    <string name="stepArrayList">stepArrayList</string>
+    <string name="stepPosition">stepPosition</string>
+    <string name="recipeName">recipeName</string>
+    <string name="data">data</string>
+    <string name="OkHttp">OkHttp</string>
+    <string name="baseUrl">https://d17h27t6h515a5.cloudfront.net/</string>
+    <string name="error">Failed to load</string>
+    <string name="noVideoAvailable">No video available</string>
+    <string name="ingredientNameList">ingredientNameList</string>
 </resources>

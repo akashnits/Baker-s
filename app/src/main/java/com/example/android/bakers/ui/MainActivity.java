@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
             fragmentTransaction.replace(R.id.fragment_container, recipeFragment);
-            fragmentTransaction.addToBackStack("recipeFragment");
+            fragmentTransaction.addToBackStack(getString(R.string.recipeFragment));
             fragmentTransaction.commit();
 
         }
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         recipeDetailsFragment.setArguments(b);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeDetailsFragment)
-                .addToBackStack("recipeDetailsFragment")
+                .addToBackStack(getString(R.string.recipeDetailsFragment))
                 .commit();
     }
 

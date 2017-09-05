@@ -59,7 +59,6 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
         RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.recipe_ingredient_widget);
 
         views.setTextViewText(R.id.appwidget_text, ingredientNameList.get(position));
-        Log.v("", "getViewAtCalled");
         return views;
     }
 

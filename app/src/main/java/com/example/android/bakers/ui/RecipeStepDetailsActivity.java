@@ -51,10 +51,10 @@ public class RecipeStepDetailsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
-            Bundle b = intent.getBundleExtra("data");
-            mStepId = b.getInt("stepPosition");
-            mRecipeName= b.getString("recipeName");
-            mStepArrayList = b.getParcelableArrayList("stepArrayList");
+            Bundle b = intent.getBundleExtra(getString(R.string.data));
+            mStepId = b.getInt(getString(R.string.stepPosition));
+            mRecipeName= b.getString(getString(R.string.recipeName));
+            mStepArrayList = b.getParcelableArrayList(getString(R.string.stepArrayList));
         }
 
         mAdapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -76,7 +76,7 @@ public class RecipeStepDetailsActivity extends AppCompatActivity {
                     if (step != null) {
                         if (!(step.getVideoURL().length() > 0 || step.getThumbnailURL().length() > 0)) {
                             Toast.makeText(RecipeStepDetailsActivity.this,
-                                    "No video available", Toast.LENGTH_SHORT).show();
+                                    R.string.noVideoAvailable, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -122,7 +122,7 @@ public class RecipeStepDetailsActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-                return RecipeStepDetailsFragment.newInstance(position, mStepArrayList, mRecipeName);
+                return RecipeStepDetailsFragment.newInstance(position, mStepArrayList, mRecipeName, RecipeStepDetailsActivity.this);
         }
 
         @Override

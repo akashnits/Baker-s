@@ -80,9 +80,9 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
                 .readTimeout(30, TimeUnit.SECONDS)
                 .build();
 
-        mResource= OkHttp3IdlingResource.create("OkHttp", client);
+        mResource= OkHttp3IdlingResource.create(getString(R.string.OkHttp), client);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://d17h27t6h515a5.cloudfront.net/")
+                .baseUrl(getString(R.string.baseUrl))
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -121,7 +121,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
 
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                Log.v(TAG, "Failed to load");
+                Log.v(TAG, getString(R.string.error));
             }
         });
     }
@@ -130,7 +130,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
     public void onRecipeClickListener(int position) {
         Bundle b = new Bundle();
         Recipe recipe= mRecipeList.get(position);
-        b.putParcelable("recipeData",recipe);
+        b.putParcelable(getString(R.string.recipeData),recipe);
         ((MainActivity) getActivity()).showRecipeDetailsFragment(b);
         List<Ingredient> ingredientList= recipe.getIngredients();
         List<String> ingredientNameList= new ArrayList<>();

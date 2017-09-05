@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recipeFragment">recipeFragment</string>
+    <string name="recipeDetailsFragment">recipeDetailsFragment</string>
+    <string name="recipeData">recipeData</string>
+    <string name="ingredientNameList">ingredientNameList</string>
+</resources>

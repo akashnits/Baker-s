@@ -1,5 +1,6 @@
 package com.example.android.bakers.ui;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -69,12 +70,12 @@ public class RecipeStepDetailsFragment extends Fragment {
 
 
 
-   public static RecipeStepDetailsFragment newInstance(int position, ArrayList<Step> stepArrayList, String recipeName) {
+   public static RecipeStepDetailsFragment newInstance(int position, ArrayList<Step> stepArrayList, String recipeName, Context context) {
 
         Bundle args = new Bundle();
-        args.putInt("stepPosition", position);
-        args.putParcelableArrayList("stepArrayList", stepArrayList);
-        args.putString("recipeName", recipeName);
+        args.putInt(context.getString(R.string.stepPosition), position);
+        args.putParcelableArrayList(context.getString(R.string.stepArrayList), stepArrayList);
+        args.putString(context.getString(R.string.recipeName), recipeName);
 
         RecipeStepDetailsFragment fragment = new RecipeStepDetailsFragment();
         fragment.setArguments(args);
@@ -101,7 +102,7 @@ public class RecipeStepDetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ActionBar actionBar= ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(getArguments().getString("recipeName"));
+            actionBar.setTitle(getArguments().getString(getString(R.string.recipeName)));
         }
 
         if(!mTwoPane) {
@@ -110,9 +111,9 @@ public class RecipeStepDetailsFragment extends Fragment {
             }
         }else {
             Bundle args = getArguments();
-            mStepId = args.getInt("stepPosition");
+            mStepId = args.getInt(getString(R.string.stepPosition));
             try {
-                mStepArrayList = args.getParcelableArrayList("stepArrayList");
+                mStepArrayList = args.getParcelableArrayList(getString(R.string.stepArrayList));
                 if (mStepArrayList != null)
                     mStep = mStepArrayList.get(mStepId);
             } catch (ClassCastException e) {
@@ -122,7 +123,7 @@ public class RecipeStepDetailsFragment extends Fragment {
                 initializeVisibleFragment(mStep);
             }
             if(mExoPlayer == null){
-                Toast.makeText(getContext(), "No Video Available", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.noVideoAvailable), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -186,7 +187,7 @@ public class RecipeStepDetailsFragment extends Fragment {
                 mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
                 mediaPlayerView.setPlayer(mExoPlayer);
 
-                String userAgent = Util.getUserAgent(getContext(), "Baker's");
+                String userAgent = Util.getUserAgent(getContext(), getString(R.string.app_name));
                 MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                                             getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
                 LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource, 2);

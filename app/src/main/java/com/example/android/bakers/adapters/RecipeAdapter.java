@@ -54,7 +54,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         Recipe recipe = mRecipe.get(position);
         holder.tvRecipeName.setText(recipe.getName());
         if(recipe.getSteps() != null)
-            holder.numberOfSteps.setText("Steps: " + String.valueOf(recipe.getSteps().size()));
+            holder.numberOfSteps.setText(mContext.getString(R.string.Steps) + String.valueOf(recipe.getSteps().size()));
         String imageUrl= recipe.getImage();
         if(imageUrl != null && imageUrl.length() > 0) {
             loadImageWithPicasso(imageUrl, holder);

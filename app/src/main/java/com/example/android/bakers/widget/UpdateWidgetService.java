@@ -30,7 +30,7 @@ public class UpdateWidgetService extends IntentService {
     public static void startUpdatingWidget(Context context, List<String> ingredientNameList){
         Intent intent= new Intent(context, UpdateWidgetService.class);
         intent.setAction(ACTION_UPDATE_WIDGET);
-        intent.putStringArrayListExtra("ingredientNameList", (ArrayList<String>) ingredientNameList);
+        intent.putStringArrayListExtra(context.getString(R.string.ingredientNameList), (ArrayList<String>) ingredientNameList);
         context.startService(intent);
 }
 
@@ -41,7 +41,7 @@ public class UpdateWidgetService extends IntentService {
                 mAppWidgetManager = AppWidgetManager.getInstance(this);
                 mAppWidgetIds = mAppWidgetManager.getAppWidgetIds(new ComponentName(this, RecipeIngredientWidgetProvider.class));
                 mAppWidgetManager.notifyAppWidgetViewDataChanged(mAppWidgetIds, R.id.widget_list_view);
-                List<String> ingredientNameList= intent.getStringArrayListExtra("ingredientNameList");
+                List<String> ingredientNameList= intent.getStringArrayListExtra(getBaseContext().getString(R.string.ingredientNameList));
                 RecipeIngredientWidgetProvider.updateAppWidget(this, mAppWidgetManager,ingredientNameList, mAppWidgetIds);
             }
         }

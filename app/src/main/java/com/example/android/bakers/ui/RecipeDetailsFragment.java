@@ -75,7 +75,7 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
         }
         Bundle args = getArguments();
         try {
-            mRecipe = args.getParcelable("recipeData");
+            mRecipe = args.getParcelable(getString(R.string.recipeData));
         } catch (ClassCastException e) {
             e.printStackTrace();
         }
@@ -90,7 +90,7 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
 
             if (savedInstanceState == null) {
                 RecipeStepDetailsFragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(0,
-                        (ArrayList<Step>) mRecipe.getSteps(), mRecipe.getName());
+                        (ArrayList<Step>) mRecipe.getSteps(), mRecipe.getName(), getActivity());
 
                 FragmentManager fm = getFragmentManager();
                 fm.beginTransaction().replace(R.id.videoDescriptionFragment_container,
@@ -111,20 +111,20 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
         Bundle b = new Bundle();
         ArrayList<Step> stepArrayList = (ArrayList<Step>) mRecipe.getSteps();
         int actualPosition = position - numberOfIngredients;
-        b.putParcelableArrayList("stepArrayList", stepArrayList);
-        b.putInt("stepPosition", actualPosition);
-        b.putString("recipeName", mRecipe.getName());
+        b.putParcelableArrayList(getString(R.string.stepArrayList), stepArrayList);
+        b.putInt(getString(R.string.stepPosition), actualPosition);
+        b.putString(getString(R.string.recipeName), mRecipe.getName());
         int finalRadius= (int) Math.hypot(view.getWidth()/2, view.getHeight()/2);
         Animator anim= ViewAnimationUtils.createCircularReveal(view,  view.getWidth()/2,  view.getHeight()/2, 0, finalRadius);
         view.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         anim.start();
         if (!mTwoPane) {
             Intent intent = new Intent(getActivity(), RecipeStepDetailsActivity.class);
-            intent.putExtra("data", b);
+            intent.putExtra(getString(R.string.data), b);
             startActivity(intent);
         } else {
             RecipeStepDetailsFragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(actualPosition,
-                    stepArrayList, mRecipe.getName());
+                    stepArrayList, mRecipe.getName(), getActivity());
 
             FragmentManager fm = getFragmentManager();
             fm.beginTransaction().replace(R.id.videoDescriptionFragment_container,
