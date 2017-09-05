@@ -38,8 +38,7 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
     public static final String TAG = RecipeDetailsFragment.class.getSimpleName();
     @BindView(R.id.rvRecipeDetails)
     RecyclerView rvRecipeDetails;
-    @BindView(R.id.pb_loading_indicator)
-    ProgressBar pbLoadingIndicator;
+
     Unbinder unbinder;
 
 
