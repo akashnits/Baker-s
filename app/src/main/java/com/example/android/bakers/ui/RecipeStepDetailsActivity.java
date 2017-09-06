@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecipeStepDetailsActivity extends AppCompatActivity {
+public class RecipeStepDetailsActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener{
 
     ViewPagerAdapter mAdapter;
     ViewPager mPager;
@@ -48,6 +48,10 @@ public class RecipeStepDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_step_details);
         ButterKnife.bind(this);
+
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
+
+        shouldDisplayHomeUp();
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -133,4 +137,18 @@ public class RecipeStepDetailsActivity extends AppCompatActivity {
         }
     }
 
+    public void shouldDisplayHomeUp(){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        shouldDisplayHomeUp();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

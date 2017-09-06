@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -87,6 +88,8 @@ public class RecipeStepDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         mTwoPane= getResources().getBoolean(R.bool.twoPaneMode);
+
+
     }
 
     @Nullable
@@ -220,5 +223,6 @@ public class RecipeStepDetailsFragment extends Fragment {
             mExoPlayer.setPlayWhenReady(false);
         }
     }
+
 
 }

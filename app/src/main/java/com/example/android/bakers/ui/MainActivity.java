@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
@@ -14,7 +15,7 @@ import com.example.android.bakers.widget.UpdateWidgetService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener{
 
     private boolean mTwoPane = false;
 
@@ -24,6 +25,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mTwoPane = getResources().getBoolean(R.bool.twoPaneMode);
 
+        if(mTwoPane){
+            getSupportFragmentManager().addOnBackStackChangedListener(this);
+            shouldDisplayHomeUp();
+        }
         if (savedInstanceState == null) {
             RecipeFragment recipeFragment = new RecipeFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -76,5 +81,27 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void shouldDisplayHomeUp(){
+        FragmentManager fm= getSupportFragmentManager();
+        Fragment f= fm.findFragmentById(R.id.fragment_container);
+        if(f instanceof RecipeDetailsFragment){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }else{
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setTitle(R.string.app_name);
+        }
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        shouldDisplayHomeUp();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
