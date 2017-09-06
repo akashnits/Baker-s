@@ -11,6 +11,7 @@ import android.view.View;
 import com.example.android.bakers.R;
 import com.example.android.bakers.widget.UpdateWidgetService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         if (!mTwoPane) {
             if (count == 0) {
                 super.onBackPressed();
+                UpdateWidgetService.startUpdatingWidget(this, new ArrayList<String>());
                 if (fm.findFragmentById(R.id.fragment_container) == null) {
                     finish();
                 }
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 this.findViewById(R.id.videoDescriptionFragment_container).setVisibility(View.GONE);
             if (count == 0) {
                 super.onBackPressed();
+                UpdateWidgetService.startUpdatingWidget(this, new ArrayList<String>());
                 if (fm.findFragmentById(R.id.fragment_container) == null) {
                     finish();
                 }
