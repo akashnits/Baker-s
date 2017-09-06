@@ -20,6 +20,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
@@ -54,10 +55,11 @@ public class RecipeDetailIntentTest {
 
         Espresso.unregisterIdlingResources(resource);
 
-        onView(withId(R.id.rvRecipe)).perform(actionOnItemViewAtPosition(1, R.id.ivCardRecipe, click()));
+        onView(withId(R.id.rvRecipe)).perform(actionOnItemViewAtPosition(0, R.id.ivCardRecipe, click()));
 
-        onView(withRecyclerView(R.id.rvRecipeDetails).atPositionOnView(10, R.id.tvStepShortDescription))
-                .check(matches(isDisplayed())).perform(click());
+
+        onView(withRecyclerView(R.id.rvRecipeDetails).atPosition(9)).perform(click());
+
 
         intended(allOf(toPackage("com.example.android.bakers"),
                 hasComponent("com.example.android.bakers.ui.RecipeStepDetailsActivity"),
