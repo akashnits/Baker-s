@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -139,7 +140,21 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
                     recipeStepDetailsFragment).commit();
         }
     }
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if(savedInstanceState != null)
+        {
+            Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable("position");
+            rvRecipeDetails.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+        }
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("position", rvRecipeDetails.getLayoutManager().onSaveInstanceState());
+    }
 
     @Override
     public void onDestroyView() {

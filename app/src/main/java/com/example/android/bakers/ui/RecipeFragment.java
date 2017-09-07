@@ -1,6 +1,7 @@
 package com.example.android.bakers.ui;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
@@ -55,6 +56,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
     private boolean twoPaneLayout;
     private boolean mTwoPane= false;
     private static IdlingResource mResource;
+    private boolean isVisible= false;
 
 
 
@@ -102,6 +104,14 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
             toolbar.setBackgroundColor(getContext().getColor(R.color.colorPrimaryDark));
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
+        if (twoPaneLayout) {
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+            rvRecipe.setLayoutManager(gridLayoutManager);
+        } else {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+            rvRecipe.setLayoutManager(linearLayoutManager);
+        }
+
         pbLoadingIndicator.setVisibility(View.VISIBLE);
 
         Call<List<Recipe>> call = apiService.getRecipes();
@@ -112,14 +122,6 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
                 if (response.isSuccessful()) {
                     mRecipeList = response.body();
                     RecipeAdapter recipeAdapter = new RecipeAdapter(getContext(), mRecipeList, RecipeFragment.this);
-
-                    if (twoPaneLayout) {
-                        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
-                        rvRecipe.setLayoutManager(gridLayoutManager);
-                    } else {
-                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-                        rvRecipe.setLayoutManager(linearLayoutManager);
-                    }
                     rvRecipe.setAdapter(recipeAdapter);
                 }
                 pbLoadingIndicator.setVisibility(View.GONE);
@@ -148,9 +150,33 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
     }
 
     @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if(savedInstanceState != null && isVisible)
+        {
+            Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable("position");
+            rvRecipe.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(isVisible)
+            outState.putParcelable("position", rvRecipe.getLayoutManager().onSaveInstanceState());
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
+        isVisible= false;
         unbinder.unbind();
+    }
+
+    @Override
+    public boolean getUserVisibleHint() {
+        isVisible= super.getUserVisibleHint();
+        return super.getUserVisibleHint();
     }
 
     public static IdlingResource getmResource(){
