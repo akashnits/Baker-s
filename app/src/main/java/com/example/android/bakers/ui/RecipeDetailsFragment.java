@@ -67,12 +67,13 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null || savedInstanceState != null) {
             if(!mTwoPane) {
-                actionBar.hide();
+                Toolbar toolbar= (Toolbar) view.findViewById(R.id.toolbar);
+                ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
-        }
+
         Bundle args = getArguments();
         try {
             mRecipe = args.getParcelable(getString(R.string.recipeData));
@@ -87,6 +88,13 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
         rvRecipeDetails.setAdapter(mAdapter);
         if (mTwoPane) {
             getActivity().findViewById(R.id.videoDescriptionFragment_container).setVisibility(View.VISIBLE);
+            Toolbar toolbar= (Toolbar) getActivity().findViewById(R.id.toolbar);
+            toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+            toolbar.setVisibility(View.VISIBLE);
+            toolbar.setTitle(mRecipe.getName());
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             if (savedInstanceState == null) {
                 RecipeStepDetailsFragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(0,
@@ -136,12 +144,12 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            if (mTwoPane) {
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-            } else if(actionBar != null){
-                actionBar.show();
+            if (mTwoPane && ((AppCompatActivity) getActivity()).getSupportActionBar() != null ) {
+                Toolbar toolbar= (Toolbar) getActivity().findViewById(R.id.toolbar);
+                toolbar.setVisibility(View.INVISIBLE);
             }
         unbinder.unbind();
     }
+
+
 }

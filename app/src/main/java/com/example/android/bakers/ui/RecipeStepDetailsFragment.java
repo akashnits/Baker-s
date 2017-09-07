@@ -104,7 +104,7 @@ public class RecipeStepDetailsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ActionBar actionBar= ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
+        if (actionBar != null && !mTwoPane) {
             actionBar.setTitle(getArguments().getString(getString(R.string.recipeName)));
         }
 

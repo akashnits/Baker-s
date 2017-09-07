@@ -97,6 +97,11 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+            Toolbar toolbar= (Toolbar) view.findViewById(R.id.toolbar);
+            toolbar.setTitle(getString(R.string.app_name));
+            toolbar.setBackgroundColor(getContext().getColor(R.color.colorPrimaryDark));
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
         pbLoadingIndicator.setVisibility(View.VISIBLE);
 
         Call<List<Recipe>> call = apiService.getRecipes();
@@ -122,7 +127,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnRecipeCl
 
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                Log.v(TAG, getString(R.string.error));
+                Toast.makeText(getActivity(), getString(R.string.error), Toast.LENGTH_SHORT).show();
             }
         });
     }
