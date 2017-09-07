@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -79,8 +80,7 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements Frag
                     Step step = mStepArrayList.get(mStepId);
                     if (step != null) {
                         if (!(step.getVideoURL().length() > 0 || step.getThumbnailURL().length() > 0)) {
-                            Toast.makeText(RecipeStepDetailsActivity.this,
-                                    R.string.noVideoAvailable, Toast.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(android.R.id.content), getString(R.string.noVideoAvailable),Snackbar.LENGTH_SHORT ).show();
                         }
                     }
                 }

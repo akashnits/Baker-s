@@ -6,10 +6,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -36,6 +38,7 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,7 +129,7 @@ public class RecipeStepDetailsFragment extends Fragment {
                 initializeVisibleFragment(mStep);
             }
             if(mExoPlayer == null){
-                Toast.makeText(getContext(), getString(R.string.noVideoAvailable), Toast.LENGTH_SHORT).show();
+                Snackbar.make(view, getString(R.string.noVideoAvailable),Snackbar.LENGTH_SHORT ).show();
             }
         }
     }
@@ -167,8 +170,8 @@ public class RecipeStepDetailsFragment extends Fragment {
         if (step != null) {
             if (step.getVideoURL().length() > 0) {
                 initializePlayer(Uri.parse(step.getVideoURL()));
-            } else if (step.getThumbnailURL().length() > 0) {
-                initializePlayer(Uri.parse(step.getThumbnailURL()));
+            } else if (!TextUtils.isEmpty(step.getThumbnailURL()) && isVideoFile(step.getThumbnailURL())) {
+                    initializePlayer(Uri.parse(step.getThumbnailURL()));
             } else {
                 initializePlayer(null);
             }
@@ -198,6 +201,12 @@ public class RecipeStepDetailsFragment extends Fragment {
                 mExoPlayer.setPlayWhenReady(false);
             }
         }
+    }
+
+
+    public static boolean isVideoFile(String path) {
+        String mimeType = URLConnection.guessContentTypeFromName(path);
+        return mimeType != null && mimeType.startsWith("video");
     }
 
     public void releasePlayer() {
