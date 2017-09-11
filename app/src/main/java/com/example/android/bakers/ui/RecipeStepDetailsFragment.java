@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.android.bakers.R;
 import com.example.android.bakers.model.Step;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -70,6 +71,7 @@ public class RecipeStepDetailsFragment extends Fragment {
     private Step mStep;
     private boolean isVisible= false;
     private boolean mTwoPane;
+    private long playerPosition;
 
 
 
@@ -106,6 +108,8 @@ public class RecipeStepDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(savedInstanceState != null)
+            playerPosition= savedInstanceState.getLong("position");
         ActionBar actionBar= ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null && !mTwoPane) {
             actionBar.setTitle(getArguments().getString(getString(R.string.recipeName)));
@@ -196,7 +200,9 @@ public class RecipeStepDetailsFragment extends Fragment {
                 String userAgent = Util.getUserAgent(getContext(), getString(R.string.app_name));
                 MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                                             getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
-                LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource, 2);
+                LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource, 1);
+                if(playerPosition != C.TIME_UNSET)
+                    mExoPlayer.seekTo(playerPosition);
                 mExoPlayer.prepare(loopingSource);
                 mExoPlayer.setPlayWhenReady(false);
             }
@@ -221,7 +227,7 @@ public class RecipeStepDetailsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        releasePlayer();
+        //releasePlayer();
         unbinder.unbind();
     }
 
@@ -229,9 +235,20 @@ public class RecipeStepDetailsFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if(mExoPlayer != null){
-            mExoPlayer.setPlayWhenReady(false);
+            playerPosition= mExoPlayer.getCurrentPosition();
+            releasePlayer();
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initializeVisibleFragment(mStep);
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("position", playerPosition);
+    }
 }
