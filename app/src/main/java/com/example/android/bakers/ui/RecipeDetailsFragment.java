@@ -6,7 +6,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -39,7 +41,6 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
     public static final String TAG = RecipeDetailsFragment.class.getSimpleName();
     @BindView(R.id.rvRecipeDetails)
     RecyclerView rvRecipeDetails;
-
     Unbinder unbinder;
 
 
@@ -59,7 +60,6 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recipe_details_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-
         mTwoPane = getResources().getBoolean(R.bool.twoPaneMode);
         return view;
     }
@@ -142,7 +142,7 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
     }
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
+            super.onViewStateRestored(savedInstanceState);
         if(savedInstanceState != null)
         {
             Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable("position");
@@ -154,6 +154,7 @@ public class RecipeDetailsFragment extends Fragment implements RecipeDetailsAdap
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("position", rvRecipeDetails.getLayoutManager().onSaveInstanceState());
+
     }
 
     @Override
