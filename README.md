@@ -6,7 +6,8 @@ Android Baking App that will allow Udacity’s resident baker-in-chief, Miriam, 
 ### Screens
 
 <img src="https://user-images.githubusercontent.com/11877726/31582932-ba6db060-b1ae-11e7-8f6b-cfd8c74dea2f.jpeg" width="400" height="700" /> | <img src="https://user-images.githubusercontent.com/11877726/31582937-c85f83c4-b1ae-11e7-9481-3c58fb1c99cf.jpeg" width="400" height="700" />
-<img src="https://user-images.githubusercontent.com/11877726/31582939-cb7a280c-b1ae-11e7-832c-bd89ad2a6ccf.jpeg" width="400" height="700" />  | <img src="https://user-images.githubusercontent.com/11877726/31582940-cead38ac-b1ae-11e7-9e3a-f49aea6a2506.jpeg" width="400" height="700" | <img src="https://user-images.githubusercontent.com/11877726/31582941-d2179a78-b1ae-11e7-9a83-11c18f3d8802.jpeg" width="400" height="700"/>
+<img src="https://user-images.githubusercontent.com/11877726/31582939-cb7a280c-b1ae-11e7-832c-bd89ad2a6ccf.jpeg" width="400" height="700" />  | <img src="https://user-images.githubusercontent.com/11877726/31582940-cead38ac-b1ae-11e7-9e3a-f49aea6a2506.jpeg" width="400" height="700"/>
+<img src="https://user-images.githubusercontent.com/11877726/31582941-d2179a78-b1ae-11e7-9a83-11c18f3d8802.jpeg" width="400" height="700"/>
 
 ## Project Overview
 You will productionize an app, taking it from a functional state to a production-ready state. This will involve finding and handling error cases, adding accessibility features, allowing for localization, adding a widget, and adding a library.
